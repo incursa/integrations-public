@@ -18,8 +18,11 @@ It exists to give the vendor family a stable public landing point and a coherent
 ## Family Map
 
 - `Incursa.Integrations.ElectronicNotary.Abstractions`
-- `Incursa.Integrations.ElectronicNotary.Proof`
-- `Incursa.Integrations.ElectronicNotary.Proof.AspNetCore`
+
+The private provider-specific Proof implementation now lives in `integrations-private` as:
+
+- `Incursa.Integrations.Proof`
+- `Incursa.Integrations.Proof.AspNetCore`
 
 ## Install
 

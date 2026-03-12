@@ -5,8 +5,6 @@
     <Project Path="src/Incursa.Integrations.Cloudflare.KvProbe/Incursa.Integrations.Cloudflare.KvProbe.csproj" />
     <Project Path="src/Incursa.Integrations.Cloudflare/Incursa.Integrations.Cloudflare.csproj" />
     <Project Path="src/Incursa.Integrations.ElectronicNotary.Abstractions/Incursa.Integrations.ElectronicNotary.Abstractions.csproj" />
-    <Project Path="src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore.csproj" />
-    <Project Path="src/Incursa.Integrations.ElectronicNotary.Proof/Incursa.Integrations.ElectronicNotary.Proof.csproj" />
     <Project Path="src/Incursa.Integrations.ElectronicNotary/Incursa.Integrations.ElectronicNotary.csproj" />
     <Project Path="src/Incursa.Integrations.Storage.Azure/Incursa.Integrations.Storage.Azure.csproj" />
     <Project Path="src/Incursa.Integrations.Stripe/Incursa.Integrations.Stripe.csproj" />

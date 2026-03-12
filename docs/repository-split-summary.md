@@ -10,8 +10,6 @@ Source projects:
 - `src/Incursa.Integrations.Cloudflare.KvProbe/`
 - `src/Incursa.Integrations.ElectronicNotary/`
 - `src/Incursa.Integrations.ElectronicNotary.Abstractions/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/`
 - `src/Incursa.Integrations.Storage.Azure/`
 - `src/Incursa.Integrations.Stripe/`
 - `src/Incursa.Integrations.WorkOS/`
@@ -58,6 +56,10 @@ Tests and tooling:
 
 - moved projects use sibling `ProjectReference` links to `../platform` for provider-neutral packages
 - several moved test projects also reference the shared `Incursa.TestDocs.Analyzers` project from `platform`
+
+## Private follow-up
+
+- the provider-specific Proof implementation was later migrated out of this repo into `integrations-private` as `src/Incursa.Integrations.Proof/` and `src/Incursa.Integrations.Proof.AspNetCore/`
 
 ## Unresolved follow-up work
 

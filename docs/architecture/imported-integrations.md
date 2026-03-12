@@ -60,9 +60,12 @@ Current public landing zone:
 
 - `src/Incursa.Integrations.ElectronicNotary/`
 - `src/Incursa.Integrations.ElectronicNotary.Abstractions/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/`
 - `tests/Incursa.Integrations.ElectronicNotary.Tests/`
+
+Provider-specific Proof implementation moved to `integrations-private`:
+
+- `src/Incursa.Integrations.Proof/`
+- `src/Incursa.Integrations.Proof.AspNetCore/`
 
 ## Summary
 

@@ -14,15 +14,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Incursa.Integrations.ElectronicNotary\Incursa.Integrations.ElectronicNotary.csproj" />
-    <ProjectReference Include="..\..\src\Incursa.Integrations.ElectronicNotary.Proof\Incursa.Integrations.ElectronicNotary.Proof.csproj" />
-    <ProjectReference Include="..\..\src\Incursa.Integrations.ElectronicNotary.Proof.AspNetCore\Incursa.Integrations.ElectronicNotary.Proof.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\src\Incursa.Platform.InMemory\Incursa.Platform.InMemory.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.12.2" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.2" />
   </ItemGroup>
 </Project>

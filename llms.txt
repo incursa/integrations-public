@@ -32,8 +32,6 @@ Public integrations:
 - `src/Incursa.Integrations.Cloudflare.KvProbe/`
 - `src/Incursa.Integrations.ElectronicNotary/`
 - `src/Incursa.Integrations.ElectronicNotary.Abstractions/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof/`
-- `src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/`
 - `src/Incursa.Integrations.Storage.Azure/`
 - `src/Incursa.Integrations.Stripe/`
 - `src/Incursa.Integrations.WorkOS/`

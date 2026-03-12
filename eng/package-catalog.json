@@ -73,34 +73,6 @@
       "notes": "Capability-specific provider adapter package."
     },
     {
-      "projectPath": "src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore.csproj",
-      "packageId": "Incursa.Integrations.ElectronicNotary.Proof.AspNetCore",
-      "zone": "src",
-      "category": "integrations",
-      "classification": "public-packable",
-      "packable": true,
-      "publishable": true,
-      "origin": {
-        "kind": "imported-repo",
-        "sourcePath": "C:/src/incursa/integrations-electronicnotary"
-      },
-      "notes": "Capability-specific provider adapter package."
-    },
-    {
-      "projectPath": "src/Incursa.Integrations.ElectronicNotary.Proof/Incursa.Integrations.ElectronicNotary.Proof.csproj",
-      "packageId": "Incursa.Integrations.ElectronicNotary.Proof",
-      "zone": "src",
-      "category": "integrations",
-      "classification": "public-packable",
-      "packable": true,
-      "publishable": true,
-      "origin": {
-        "kind": "imported-repo",
-        "sourcePath": "C:/src/incursa/integrations-electronicnotary"
-      },
-      "notes": "Capability-specific provider adapter package."
-    },
-    {
       "projectPath": "src/Incursa.Integrations.ElectronicNotary/Incursa.Integrations.ElectronicNotary.csproj",
       "packageId": "Incursa.Integrations.ElectronicNotary",
       "zone": "src",
