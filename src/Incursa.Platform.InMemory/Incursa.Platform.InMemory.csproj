@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -38,23 +38,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Correlation" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Idempotency" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Operations" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform" />
+    <PackageReference Include="Incursa.Platform.Audit" />
+    <PackageReference Include="Incursa.Platform.Correlation" />
+    <PackageReference Include="Incursa.Platform.Idempotency" />
+    <PackageReference Include="Incursa.Platform.Operations" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cronos" Version="0.11.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.2" />
+    <PackageReference Include="Cronos" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39" />
-    <PackageReference Update="Meziantou.Analyzer" Version="2.0.284" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.102" />
-    <PackageReference Update="Roslynator.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.CodeAnalysis.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.Formatting.Analyzers" Version="4.15.0" />
+    <PackageReference Update="Meziantou.Analyzer" VersionOverride="2.0.284" />
   </ItemGroup>
 </Project>

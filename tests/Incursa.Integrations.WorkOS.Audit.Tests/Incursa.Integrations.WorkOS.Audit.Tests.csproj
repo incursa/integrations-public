@@ -10,17 +10,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Incursa.Integrations.WorkOS.Audit\Incursa.Integrations.WorkOS.Audit.csproj" />
-    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
+    <PackageReference Include="Incursa.Platform" />
+    <PackageReference Include="Incursa.Platform.Audit" />
+    <PackageReference Include="Incursa.TestDocs.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
 </Project>

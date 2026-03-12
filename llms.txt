@@ -66,6 +66,7 @@ Supporting test/tooling projects retained here:
 
 ## Authoritative governance files
 
+- `Directory.Packages.props`: authoritative central package version manifest for NuGet dependencies across the repo
 - `eng/package-catalog.json`: authoritative project classification and pack/publish allowlist for this repo
 - `eng/package-versions.json`: authoritative per-package semantic version manifest for packable projects
 - `eng/Generate-PackageCatalog.ps1`: regenerates the catalog from the current repo tree

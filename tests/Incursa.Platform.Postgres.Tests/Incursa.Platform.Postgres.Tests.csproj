@@ -6,39 +6,32 @@
     <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform" />
     <ProjectReference Include="..\..\src\Incursa.Platform.Postgres\Incursa.Platform.Postgres.csproj" />
-    <PackageReference Include="Incursa.Platform.Modularity" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Modularity.Razor" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Modularity" />
+    <PackageReference Include="Incursa.Platform.Modularity.Razor" />
     <ProjectReference Include="..\..\..\platform\tests\Incursa.Platform.TestUtilities\Incursa.Platform.TestUtilities.csproj" />
-    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
+    <PackageReference Include="Incursa.TestDocs.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
-    <PackageReference Include="Testcontainers.PostgreSql" Version="4.10.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39" />
-    <PackageReference Update="Meziantou.Analyzer" Version="2.0.284" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.102" />
-    <PackageReference Update="Roslynator.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.CodeAnalysis.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.Formatting.Analyzers" Version="4.15.0" />
-    <PackageReference Update="xunit.runner.visualstudio" Version="3.1.5">
+    <PackageReference Update="Meziantou.Analyzer" VersionOverride="2.0.284" />
+    <PackageReference Update="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="xunit.v3" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.v3.json">

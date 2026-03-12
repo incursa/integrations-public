@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -15,14 +15,14 @@
     <ProjectReference Include="..\Incursa.Integrations.WorkOS.Abstractions\Incursa.Integrations.WorkOS.Abstractions.csproj" />
     <ProjectReference Include="..\Incursa.Integrations.WorkOS.Access\Incursa.Integrations.WorkOS.Access.csproj" />
     <ProjectReference Include="..\Incursa.Integrations.WorkOS\Incursa.Integrations.WorkOS.csproj" />
-    <PackageReference Include="Incursa.Platform.Access.AspNetCore" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Access.Razor" Version="$(IncursaPlatformAccessRazorPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Access.AspNetCore" />
+    <PackageReference Include="Incursa.Platform.Access.Razor" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\**\*.cs" Exclude="..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\bin\**\*;..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\obj\**\*" LinkBase="AppAuth.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -45,30 +45,25 @@
     <EmbeddedResource Include="sql\**\*.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Operations" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Idempotency" Version="$(IncursaPlatformPackageVersion)" />
-    <PackageReference Include="Incursa.Platform.Observability" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform" />
+    <PackageReference Include="Incursa.Platform.Audit" />
+    <PackageReference Include="Incursa.Platform.Operations" />
+    <PackageReference Include="Incursa.Platform.Idempotency" />
+    <PackageReference Include="Incursa.Platform.Observability" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Incursa.Generators" Version="2026.2.19.38" PrivateAssets="all" />
-    <PackageReference Include="Cronos" Version="0.11.1" />
-    <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="dbup" Version="5.0.41" />
-    <PackageReference Include="dbup-sqlserver" Version="6.0.16" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.2" />
+    <PackageReference Include="Incursa.Generators" PrivateAssets="all" />
+    <PackageReference Include="Cronos" />
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="dbup" />
+    <PackageReference Include="dbup-sqlserver" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39" />
-    <PackageReference Update="Meziantou.Analyzer" Version="2.0.284" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.102" />
-    <PackageReference Update="Roslynator.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.CodeAnalysis.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.Formatting.Analyzers" Version="4.15.0" />
+    <PackageReference Update="Meziantou.Analyzer" VersionOverride="2.0.284" />
   </ItemGroup>
 </Project>

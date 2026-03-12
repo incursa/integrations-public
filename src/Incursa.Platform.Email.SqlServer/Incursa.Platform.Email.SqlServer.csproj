@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -21,7 +21,7 @@
     <NoWarn>$(NoWarn);NU5123;SA1000;SA1101;SA1200;SA1204;SA1206;SA1313;SA1413;SA1516;SA1518;S1144;S2139;S3459</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Incursa.Platform.Email" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Email" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\nuget_logo.png">
@@ -34,14 +34,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Meziantou.Analyzer" Version="2.0.284" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.102" />
-    <PackageReference Update="Roslynator.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.CodeAnalysis.Analyzers" Version="4.15.0" />
-    <PackageReference Update="Roslynator.Formatting.Analyzers" Version="4.15.0" />
+    <PackageReference Update="Meziantou.Analyzer" VersionOverride="2.0.284" />
   </ItemGroup>
 </Project>
