@@ -14,19 +14,87 @@ $ErrorActionPreference = "Stop"
 
 Assert-DotNetAvailable
 
+function Test-IsTestProject {
+    param(
+        [Parameter(Mandatory)]
+        [string]$ProjectPath
+    )
+
+    [xml]$project = Get-Content -LiteralPath $ProjectPath
+
+    foreach ($propertyGroup in @($project.Project.PropertyGroup)) {
+        $isTestProjectProperty = $propertyGroup.PSObject.Properties["IsTestProject"]
+        if ($null -ne $isTestProjectProperty -and [string]$isTestProjectProperty.Value -match '^(?i:true)$') {
+            return $true
+        }
+    }
+
+    $sdk = [string]$project.Project.Sdk
+    if ($sdk -match '(^|;)MSTest\.Sdk($|;)') {
+        return $true
+    }
+
+    $testPackageIds = @(
+        "Microsoft.NET.Test.Sdk",
+        "xunit",
+        "xunit.v3",
+        "xunit.runner.visualstudio",
+        "NUnit",
+        "NUnit3TestAdapter",
+        "MSTest.TestAdapter",
+        "MSTest.TestFramework"
+    )
+
+    foreach ($itemGroup in @($project.Project.ItemGroup)) {
+        $packageReferenceProperty = $itemGroup.PSObject.Properties["PackageReference"]
+        if ($null -eq $packageReferenceProperty) {
+            continue
+        }
+
+        foreach ($packageReference in @($packageReferenceProperty.Value)) {
+            $packageId = [string]$packageReference.Include
+            if ($testPackageIds -contains $packageId) {
+                return $true
+            }
+        }
+    }
+
+    return $false
+}
+
+function Get-SmokeLaneProjects {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RepoRoot,
+
+        [Parameter(Mandatory)]
+        [string]$SolutionPath
+    )
+
+    [xml]$solution = Get-Content -LiteralPath $SolutionPath
+    $projectPaths = New-Object System.Collections.Generic.List[string]
+
+    foreach ($projectNode in @($solution.SelectNodes('//Project[@Path]'))) {
+        $relativeProjectPath = [string]$projectNode.Path
+        if (-not $relativeProjectPath.StartsWith('tests/', [System.StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+
+        $projectPath = Resolve-RepoPath -RepoRoot $RepoRoot -Path $relativeProjectPath
+        if (Test-IsTestProject -ProjectPath $projectPath) {
+            $projectPaths.Add($projectPath)
+        }
+    }
+
+    return $projectPaths.ToArray()
+}
+
 $repoRoot = Get-QualityRepoRoot
 $solutionPath = Resolve-RepoPath -RepoRoot $repoRoot -Path $Solution
 $runsettingsPath = Resolve-RepoPath -RepoRoot $repoRoot -Path $Runsettings
 $resultsPath = Resolve-RepoPath -RepoRoot $repoRoot -Path $ResultsDirectory
 $summaryPath = Join-Path $resultsPath "summary.md"
-
-$projects = @(
-    "tests/Incursa.Platform.Tests/Incursa.Platform.Tests.csproj",
-    "tests/Incursa.Platform.Storage.Tests/Incursa.Platform.Storage.Tests.csproj",
-    "tests/Incursa.Platform.InMemory.Tests/Incursa.Platform.InMemory.Tests.csproj",
-    "tests/Incursa.Platform.HealthProbe.Tests/Incursa.Platform.HealthProbe.Tests.csproj",
-    "tests/Incursa.Platform.Webhooks.Tests/Incursa.Platform.Webhooks.Tests.csproj"
-)
+$projects = Get-SmokeLaneProjects -RepoRoot $repoRoot -SolutionPath $solutionPath
 
 Write-Host "Running smoke lane..." -ForegroundColor Cyan
 Write-Host "Solution: $solutionPath" -ForegroundColor Yellow
@@ -36,8 +104,7 @@ Write-Host "Results: $resultsPath" -ForegroundColor Yellow
 Initialize-ArtifactDirectory -Path $resultsPath -Clean | Out-Null
 Invoke-TestPrerequisites -Solution $solutionPath -Configuration $Configuration -NoRestore:$NoRestore -NoBuild:$NoBuild
 
-foreach ($project in $projects) {
-    $projectPath = Resolve-RepoPath -RepoRoot $repoRoot -Path $project
+foreach ($projectPath in $projects) {
     $projectName = [System.IO.Path]::GetFileNameWithoutExtension($projectPath)
     $testArgs = @(
         "test"
