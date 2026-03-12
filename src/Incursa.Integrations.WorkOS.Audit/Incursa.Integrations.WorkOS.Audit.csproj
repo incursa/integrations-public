@@ -21,8 +21,8 @@
     <NoWarn>$(NoWarn);NU5123</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform\Incursa.Platform.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Audit\Incursa.Platform.Audit.csproj" />
+    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />

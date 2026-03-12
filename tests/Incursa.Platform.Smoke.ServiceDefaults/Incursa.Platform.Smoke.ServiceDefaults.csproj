@@ -6,8 +6,8 @@
     <IsAspireSharedProject>true</IsAspireSharedProject>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Health\Incursa.Platform.Health.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Health.AspNetCore\Incursa.Platform.Health.AspNetCore.csproj" />
+    <PackageReference Include="Incursa.Platform.Health" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Health.AspNetCore" Version="$(IncursaPlatformPackageVersion)" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />

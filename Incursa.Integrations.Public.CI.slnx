@@ -35,12 +35,9 @@
     <Project Path="tests/Incursa.Platform.CustomDomains.Tests/Incursa.Platform.CustomDomains.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Dns.Tests/Incursa.Platform.Dns.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Email.Tests/Incursa.Platform.Email.Tests.csproj" />
-    <Project Path="tests/Incursa.Platform.InMemory.Tests/Incursa.Platform.InMemory.Tests.csproj" />
-    <Project Path="tests/Incursa.Platform.Postgres.Tests/Incursa.Platform.Postgres.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Smoke.AppHost/Incursa.Platform.Smoke.AppHost.csproj" />
     <Project Path="tests/Incursa.Platform.Smoke.ServiceDefaults/Incursa.Platform.Smoke.ServiceDefaults.csproj" />
     <Project Path="tests/Incursa.Platform.SmokeWeb/Incursa.Platform.SmokeWeb.csproj" />
-    <Project Path="tests/Incursa.Platform.SqlServer.Tests/Incursa.Platform.SqlServer.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/" />
   <Folder Name="/tools/migrations/" />

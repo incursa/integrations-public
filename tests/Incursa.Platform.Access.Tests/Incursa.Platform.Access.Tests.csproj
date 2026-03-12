@@ -7,7 +7,7 @@
     <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Access\Incursa.Platform.Access.csproj" />
+    <PackageReference Include="Incursa.Platform.Access" Version="$(IncursaPlatformPackageVersion)" />
     <ProjectReference Include="..\..\src\Incursa.Integrations.WorkOS.Access\Incursa.Integrations.WorkOS.Access.csproj" />
   </ItemGroup>
   <ItemGroup>

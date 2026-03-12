@@ -3,6 +3,10 @@
 
   <PropertyGroup>
     <NoWarn>$(NoWarn);MA0051;CA1848;CA1873;NU5104</NoWarn>
+    <IncursaPlatformPackageVersion>6.0.3</IncursaPlatformPackageVersion>
+    <IncursaPlatformAccessRazorPackageVersion>6.0.4</IncursaPlatformAccessRazorPackageVersion>
+    <IncursaPlatformTestUtilitiesPackageVersion>1.0.0</IncursaPlatformTestUtilitiesPackageVersion>
+    <IncursaTestDocsAnalyzersPackageVersion>6.0.3</IncursaTestDocsAnalyzersPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">

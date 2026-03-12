@@ -10,12 +10,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Incursa.Integrations.WorkOS.Audit\Incursa.Integrations.WorkOS.Audit.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform\Incursa.Platform.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Audit\Incursa.Platform.Audit.csproj" />
-    <ProjectReference Include="..\..\..\platform\tools\testdocs\src\Incursa.TestDocs.Analyzers\Incursa.TestDocs.Analyzers.csproj">
+    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </ProjectReference>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -41,11 +41,11 @@
     <EmbeddedResource Include="SchemaMigrations\**\*.sql" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform\Incursa.Platform.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Audit\Incursa.Platform.Audit.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Correlation\Incursa.Platform.Correlation.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Idempotency\Incursa.Platform.Idempotency.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Operations\Incursa.Platform.Operations.csproj" />
+    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Audit" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Correlation" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Idempotency" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Operations" Version="$(IncursaPlatformPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Incursa.Generators" Version="2026.2.19.38" PrivateAssets="all" />

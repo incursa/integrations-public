@@ -8,11 +8,11 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Incursa.Integrations.WorkOS.Webhooks\Incursa.Integrations.WorkOS.Webhooks.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Webhooks\Incursa.Platform.Webhooks.csproj" />
-    <ProjectReference Include="..\..\..\platform\tools\testdocs\src\Incursa.TestDocs.Analyzers\Incursa.TestDocs.Analyzers.csproj">
+    <PackageReference Include="Incursa.Platform.Webhooks" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </ProjectReference>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />

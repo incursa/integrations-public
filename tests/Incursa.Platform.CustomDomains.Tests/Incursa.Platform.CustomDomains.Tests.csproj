@@ -7,7 +7,7 @@
     <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.CustomDomains\Incursa.Platform.CustomDomains.csproj" />
+    <PackageReference Include="Incursa.Platform.CustomDomains" Version="$(IncursaPlatformPackageVersion)" />
     <ProjectReference Include="..\..\src\Incursa.Integrations.Cloudflare.CustomDomains\Incursa.Integrations.Cloudflare.CustomDomains.csproj" />
   </ItemGroup>
   <ItemGroup>

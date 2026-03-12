@@ -6,13 +6,13 @@
     <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform\Incursa.Platform.csproj" />
+    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
     <ProjectReference Include="..\..\src\Incursa.Platform.InMemory\Incursa.Platform.InMemory.csproj" />
     <ProjectReference Include="..\..\..\platform\tests\Incursa.Platform.TestUtilities\Incursa.Platform.TestUtilities.csproj" />
-    <ProjectReference Include="..\..\..\platform\tools\testdocs\src\Incursa.TestDocs.Analyzers\Incursa.TestDocs.Analyzers.csproj">
+    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </ProjectReference>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />

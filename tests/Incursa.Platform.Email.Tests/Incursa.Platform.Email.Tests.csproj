@@ -7,15 +7,15 @@
     <NoWarn>$(NoWarn);NU1510</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Email\Incursa.Platform.Email.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Email.AspNetCore\Incursa.Platform.Email.AspNetCore.csproj" />
+    <PackageReference Include="Incursa.Platform.Email" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Email.AspNetCore" Version="$(IncursaPlatformPackageVersion)" />
     <ProjectReference Include="..\..\src\Incursa.Platform.Email.Postmark\Incursa.Platform.Email.Postmark.csproj" />
     <ProjectReference Include="..\..\src\Incursa.Platform.Email.Postgres\Incursa.Platform.Email.Postgres.csproj" />
     <ProjectReference Include="..\..\src\Incursa.Platform.Email.SqlServer\Incursa.Platform.Email.SqlServer.csproj" />
-    <ProjectReference Include="..\..\..\platform\tools\testdocs\src\Incursa.TestDocs.Analyzers\Incursa.TestDocs.Analyzers.csproj">
+    <PackageReference Include="Incursa.TestDocs.Analyzers" Version="$(IncursaTestDocsAnalyzersPackageVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </ProjectReference>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Meziantou.Analyzer" Version="2.0.284" />

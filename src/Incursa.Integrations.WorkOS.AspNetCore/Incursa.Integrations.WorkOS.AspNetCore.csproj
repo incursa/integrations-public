@@ -15,8 +15,8 @@
     <ProjectReference Include="..\Incursa.Integrations.WorkOS.Abstractions\Incursa.Integrations.WorkOS.Abstractions.csproj" />
     <ProjectReference Include="..\Incursa.Integrations.WorkOS.Access\Incursa.Integrations.WorkOS.Access.csproj" />
     <ProjectReference Include="..\Incursa.Integrations.WorkOS\Incursa.Integrations.WorkOS.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Access.AspNetCore\Incursa.Platform.Access.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Access.Razor\Incursa.Platform.Access.Razor.csproj" />
+    <PackageReference Include="Incursa.Platform.Access.AspNetCore" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.Access.Razor" Version="$(IncursaPlatformAccessRazorPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\**\*.cs" Exclude="..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\bin\**\*;..\Incursa.Integrations.WorkOS.AppAuth.AspNetCore\obj\**\*" LinkBase="AppAuth.AspNetCore" />

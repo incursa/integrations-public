@@ -19,7 +19,7 @@
 
 - `integrations-public` may reference `platform`
 - `platform` must not reference `integrations-public`
-- current local development uses sibling `ProjectReference` links to `../platform`
+- external `platform` dependencies are consumed as NuGet packages; CI does not check out a sibling `../platform` repo
 - package names stay stable even when they still use the `Incursa.Platform.*` family
 
 ## Package families in this repo

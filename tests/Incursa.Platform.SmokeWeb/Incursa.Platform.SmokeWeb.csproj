@@ -6,8 +6,8 @@
     <RootNamespace>Incursa.Platform.SmokeWeb</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform\Incursa.Platform.csproj" />
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.HealthProbe\Incursa.Platform.HealthProbe.csproj" />
+    <PackageReference Include="Incursa.Platform" Version="$(IncursaPlatformPackageVersion)" />
+    <PackageReference Include="Incursa.Platform.HealthProbe" Version="$(IncursaPlatformPackageVersion)" />
     <ProjectReference Include="..\..\src\Incursa.Platform.SqlServer\Incursa.Platform.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Incursa.Platform.Postgres\Incursa.Platform.Postgres.csproj" />
     <ProjectReference Include="..\..\src\Incursa.Platform.InMemory\Incursa.Platform.InMemory.csproj" />

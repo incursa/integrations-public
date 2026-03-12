@@ -21,7 +21,7 @@
     <NoWarn>$(NoWarn);NU5123;SA1000;SA1101;SA1200;SA1204;SA1206;SA1313;SA1413;SA1516;SA1518;S1144;S2139;S3459</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Email\Incursa.Platform.Email.csproj" />
+    <PackageReference Include="Incursa.Platform.Email" Version="$(IncursaPlatformPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\nuget_logo.png">

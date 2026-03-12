@@ -37,7 +37,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\platform\src\Incursa.Platform.Storage\Incursa.Platform.Storage.csproj" />
+    <PackageReference Include="Incursa.Platform.Storage" Version="$(IncursaPlatformPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Data.Tables" Version="12.11.0" />
