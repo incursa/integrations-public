@@ -1,0 +1,107 @@
+# Incursa Integrations Public
+
+`integrations-public` is the public provider-implementation repository for the Incursa split. Keep this repo focused on concrete adapters and provider-backed implementations that can depend on `platform`, while keeping provider-neutral abstractions in [C:\src\incursa\platform](C:/src/incursa/platform).
+
+## Repository map
+
+- `src/`: public provider-specific packages and concrete provider implementations
+- `tests/`: provider-focused tests, smoke hosts, and the smallest shared test helpers needed by this repo
+- `tools/`: schema migration tooling that ships with moved provider packages
+- `eng/`: package catalog and versioning helpers
+- `docs/`: architecture, scope boundary, and repository split records
+
+## Primary solutions
+
+- `Incursa.Integrations.Public.slnx`: day-to-day solution for the public integrations surface
+- `Incursa.Integrations.Public.CI.slnx`: build/test/pack solution for this repo
+
+## Dependency boundary
+
+- `integrations-public` may reference `platform`
+- `platform` must not reference `integrations-public`
+- current local development uses sibling `ProjectReference` links to `../platform`
+- package names stay stable even when they still use the `Incursa.Platform.*` family
+
+## Package families in this repo
+
+Public integrations:
+
+- `src/Incursa.Integrations.Cloudflare/`
+- `src/Incursa.Integrations.Cloudflare.CustomDomains/`
+- `src/Incursa.Integrations.Cloudflare.Dns/`
+- `src/Incursa.Integrations.Cloudflare.KvProbe/`
+- `src/Incursa.Integrations.ElectronicNotary/`
+- `src/Incursa.Integrations.ElectronicNotary.Abstractions/`
+- `src/Incursa.Integrations.ElectronicNotary.Proof/`
+- `src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/`
+- `src/Incursa.Integrations.Storage.Azure/`
+- `src/Incursa.Integrations.Stripe/`
+- `src/Incursa.Integrations.WorkOS/`
+- `src/Incursa.Integrations.WorkOS.Abstractions/`
+- `src/Incursa.Integrations.WorkOS.Access/`
+- `src/Incursa.Integrations.WorkOS.AspNetCore/`
+- `src/Incursa.Integrations.WorkOS.Audit/`
+- `src/Incursa.Integrations.WorkOS.Webhooks/`
+
+Provider implementations with stable `Incursa.Platform.*` identities:
+
+- `src/Incursa.Platform.Email.Postmark/`
+- `src/Incursa.Platform.Email.Postgres/`
+- `src/Incursa.Platform.Email.SqlServer/`
+- `src/Incursa.Platform.InMemory/`
+- `src/Incursa.Platform.Postgres/`
+- `src/Incursa.Platform.SqlServer/`
+
+Supporting test/tooling projects retained here:
+
+- `tests/Incursa.Platform.Access.Tests/`
+- `tests/Incursa.Platform.CustomDomains.Tests/`
+- `tests/Incursa.Platform.Dns.Tests/`
+- `tests/Incursa.Platform.Email.Tests/`
+- `tests/Incursa.Platform.InMemory.Tests/`
+- `tests/Incursa.Platform.Postgres.Tests/`
+- `tests/Incursa.Platform.SqlServer.Tests/`
+- `tests/Incursa.Platform.Smoke.AppHost/`
+- `tests/Incursa.Platform.Smoke.ServiceDefaults/`
+- `tests/Incursa.Platform.SmokeWeb/`
+- `tools/migrations/src/Incursa.Platform.SchemaMigrations.Cli/`
+
+## Authoritative governance files
+
+- `eng/package-catalog.json`: authoritative project classification and pack/publish allowlist for this repo
+- `eng/package-versions.json`: authoritative per-package semantic version manifest for packable projects
+- `eng/Generate-PackageCatalog.ps1`: regenerates the catalog from the current repo tree
+- `eng/Initialize-PackageVersions.ps1`: rewrites the version manifest from the current catalog
+- `eng/Resolve-AffectedProjects.ps1`: calculates changed projects and reverse dependencies
+- `eng/Resolve-VersionPlan.ps1`: calculates semantic version bumps for changed packable projects and reverse dependents
+- `eng/Apply-VersionPlan.ps1`: applies the resolved version plan to the manifest and `.csproj` files
+- `eng/Test-PackageVersionChanges.ps1`: validates that affected packable projects include version bumps
+- `eng/Pack-PublicPackages.ps1`: packs only catalog-allowlisted projects
+- `docs/repo-split-plan.md`: classification and split plan used for the extraction
+- `docs/repository-split-summary.md`: what moved here and what still depends on `platform`
+
+## Orientation commands
+
+```powershell
+pwsh -File .codex/skills/dotnet-repo-discovery/scripts/discover-dotnet-repo.ps1
+pwsh -File .codex/skills/dotnet-build-diagnostics/scripts/run-build-diagnostics.ps1
+pwsh -File eng/Resolve-VersionPlan.ps1 -Base origin/main -Head HEAD -AsJson
+```
+
+When tests are involved:
+
+```bash
+bash .codex/skills/dotnet-test-triage/scripts/run-test-triage.sh
+```
+
+## Validation commands
+
+```powershell
+dotnet restore Incursa.Integrations.Public.CI.slnx
+dotnet tool restore
+dotnet build Incursa.Integrations.Public.CI.slnx -c Release
+dotnet test Incursa.Integrations.Public.CI.slnx -c Release
+pwsh -File eng/Generate-PackageCatalog.ps1
+pwsh -File eng/Initialize-PackageVersions.ps1
+pwsh -File eng/Pack-PublicPackages.ps1 -Configuration Release -OutputPath ./nupkgs
+```

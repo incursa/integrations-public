@@ -1,0 +1,250 @@
+# Email Outbox
+
+Incursa.Platform.Email provides a provider-agnostic outbox core for reliable email delivery.
+It focuses on idempotent enqueueing, explicit dispatching, and provider adapter integration points.
+
+## Architecture
+
+The system separates enqueue from processing for reliability and control:
+
+- **Enqueue**: application code builds an `OutboundEmailMessage` and calls `IEmailOutbox.EnqueueAsync`.
+  - The message is validated and serialized to the platform outbox (`IOutbox`).
+  - `IEmailDeliverySink.RecordQueuedAsync` is called for observability.
+- **Processing**: a worker calls `EmailOutboxProcessor.ProcessOnceAsync` (or the hosted service loop).
+  - `IOutboxStore` claims due messages, `IOutboundEmailSender` sends them, and `IEmailDeliverySink` records attempts and final state.
+  - `IIdempotencyStore` (from `Incursa.Platform.Idempotency`) enforces message-key dedupe across workers.
+  - `IEmailSendPolicy` can throttle, delay, or reject sends before the provider call.
+
+## Quick Start
+
+```csharp
+services.AddSqlOutbox("Server=.;Database=app;Trusted_Connection=True;");
+services.AddSqlIdempotency("Server=.;Database=app;Trusted_Connection=True;");
+// For Postgres use AddPostgresOutbox/AddPostgresIdempotency instead.
+services.AddIncursaEmailCore();
+services.AddIncursaEmailProcessingHostedService();
+
+var outbox = serviceProvider.GetRequiredService<IEmailOutbox>();
+
+var message = new OutboundEmailMessage(
+    messageKey: "postmark:welcome:123",
+    from: new EmailAddress("noreply@acme.com", "Acme"),
+    to: new[] { new EmailAddress("user@acme.com") },
+    subject: "Welcome",
+    textBody: "Hello from the outbox!",
+    htmlBody: null);
+
+await outbox.EnqueueAsync(message, CancellationToken.None);
+
+// Manual processing when you are not running the hosted service:
+var processor = serviceProvider.GetRequiredService<IEmailOutboxProcessor>();
+await processor.ProcessOnceAsync(CancellationToken.None);
+```
+
+## Idempotency and the Outbox Pattern
+
+### MessageKey rules
+
+`MessageKey` is the stable idempotency key for a logical message. It must:
+
+- Be **stable across retries** and worker restarts.
+- Be **unique per logical email send** (not per attempt).
+- Be **deterministic** from your business context.
+
+Good examples:
+
+- `welcome:{userId}` for a once-per-user welcome email.
+- `invoice:{invoiceId}:receipt` for a receipt tied to an invoice.
+- `password-reset:{resetTokenId}` for a single reset flow.
+
+Bad examples:
+
+- A random GUID generated at enqueue time.
+- A timestamp-based key (`welcome:2025-01-01T12:00:00Z`).
+
+The processor uses `IIdempotencyStore` to ensure concurrent workers cannot double-send.
+If a duplicate key is detected, the message is suppressed and recorded as `Suppressed`.
+
+## Retry / Backoff Tuning
+
+`EmailOutboxProcessorOptions` controls retries and backoff behavior:
+
+- `MaxAttempts` caps attempts before a message is marked permanently failed.
+- `BackoffPolicy` controls delay between retries (default exponential).
+
+Example (custom backoff):
+
+```csharp
+services.AddIncursaEmailCore(
+    configureProcessorOptions: options =>
+    {
+        options.MaxAttempts = 5;
+        options.BackoffPolicy = attempt => TimeSpan.FromSeconds(Math.Min(60, Math.Pow(2, attempt)));
+    });
+```
+
+Notes:
+
+- `EmailDeliveryStatus.FailedTransient` is retried until `MaxAttempts` is reached.
+- All failures are capped even if they are transient to avoid infinite loops.
+
+## Throttling Policies
+
+Use `IEmailSendPolicy` to apply rate limits or scheduled delays before calling the provider.
+
+### Global rate limit
+
+```csharp
+services.AddSingleton<IEmailSendPolicy>(
+    new FixedRateLimitPolicy(limit: 100, window: TimeSpan.FromMinutes(1), perRecipient: false, TimeProvider.System));
+```
+
+### Per-recipient rate limit
+
+```csharp
+services.AddSingleton<IEmailSendPolicy>(
+    new FixedRateLimitPolicy(limit: 5, window: TimeSpan.FromMinutes(10), perRecipient: true, TimeProvider.System));
+```
+
+Policy outcomes:
+
+- **Allow**: message is sent immediately.
+- **Delay**: message is rescheduled until `DelayUntilUtc`.
+- **Reject**: message is marked `FailedPermanent` and recorded.
+
+## Provider Adapters
+
+### Core responsibilities (Incursa.Platform.Email)
+
+- Provider-agnostic message model and validation (`OutboundEmailMessage`, `EmailMessageValidator`).
+- Outbox enqueue and processing (`IEmailOutbox`, `EmailOutboxProcessor`).
+- Idempotency and delivery tracking interfaces (`IIdempotencyStore`, `IEmailDeliverySink`), with idempotency supplied by `Incursa.Platform.Idempotency`.
+- Throttling policy (`IEmailSendPolicy`).
+
+### Provider adapter responsibilities (integration repositories)`r`n`r`n- Translate `OutboundEmailMessage` into provider payloads.`r`n- Inject provider headers/metadata (including `MessageKey`).`r`n- Classify provider HTTP errors into transient vs permanent results.`r`n- Provide webhook integration for bounce/suppression tracking.`r`n- Expose provider-specific validation and reconciliation helpers.`r`n`r`n### App-specific responsibilities
+
+- Choose `MessageKey` and business-level dedupe rules.
+- Configure retry/backoff and throttling.
+- Implement `IEmailDeliverySink` to persist status updates.
+- Register DI and hosted processing loop.
+
+## Delivery Tracking via Provider Webhooks`r`n`r`n- Register the provider webhook implementation from the integration package to translate provider webhooks into delivery updates.`r`n- Correlation is performed via `MessageKey` (sent in metadata/header) and/or provider message id.`r`n`r`n## Reconciliation (send exactly once)
+
+When a send fails with an ambiguous response, the processor can probe the provider to confirm whether the
+message was actually accepted. The provider probe searches by `MessageKey` metadata and converts the result
+into a confirmed delivery status. This probe is **additive** and does not replace the normal send flow.
+
+If the probe confirms delivery, the message is finalized without retrying; if not found, normal retries apply.
+
+## ASP.NET Core Helpers
+
+- `Incursa.Platform.Email.AspNetCore` supplies DI helpers for registering the outbox components.
+- Hosting layers should wire up `IOutbox`/`IOutboxStore`, `IOutboundEmailSender`, and `IIdempotencyStore` (for SQL Server, register `AddSqlIdempotency`).
+
+Enqueue usage:
+
+```csharp
+public sealed class WelcomeEmails
+{
+    private readonly IEmailOutbox outbox;
+
+    public WelcomeEmails(IEmailOutbox outbox)
+    {
+        this.outbox = outbox;
+    }
+
+    public Task SendAsync(string recipient, CancellationToken cancellationToken)
+    {
+        var message = new OutboundEmailMessage(
+            messageKey: $"welcome:{recipient}",
+            from: new EmailAddress("noreply@acme.com", "Acme"),
+            to: new[] { new EmailAddress(recipient) },
+            subject: "Welcome",
+            textBody: "Hello!",
+            htmlBody: null);
+
+        return outbox.EnqueueAsync(message, cancellationToken);
+    }
+}
+```
+
+Wiring + running processor:
+
+```csharp
+services.AddIncursaEmailCore();
+// Register provider adapter options via the integration package
+// (for example, Incursa.Integrations.Postmark.AspNetCore).
+
+services.AddIncursaEmailProcessingHostedService(options =>
+{
+    options.PollInterval = TimeSpan.FromSeconds(5);
+});
+```
+
+### Idempotency cleanup
+
+To remove old idempotency records, register the cleanup hosted service:
+
+```csharp
+services.AddIncursaEmailIdempotencyCleanupHostedService(options =>
+{
+    options.RetentionPeriod = TimeSpan.FromDays(7);
+    options.CleanupInterval = TimeSpan.FromHours(1);
+});
+```
+
+## Observability integration
+
+Use `Incursa.Platform.Observability` conventions to tie email sends and webhooks into audit + operations.
+
+- Audit events emitted by the email subsystem include:
+  - `PlatformEventNames.EmailQueued`
+  - `PlatformEventNames.EmailAttempted`
+  - `PlatformEventNames.EmailSent`
+  - `PlatformEventNames.EmailFailed`
+  - `PlatformEventNames.EmailSuppressed`
+  - `PlatformEventNames.EmailBounced`
+  - `PlatformEventNames.WebhookReceived`
+- Include `PlatformTagKeys.MessageKey`, `PlatformTagKeys.Provider`, and `PlatformTagKeys.WebhookEventId` in tags.
+- If you are tracking long-running sends, emit operation events via `IPlatformEventEmitter`.
+- Metrics emitted include counts for queued/attempted/sent/failed/suppressed/bounced, webhook received,
+  and size histograms for body/attachment/total bytes.
+
+Example:
+
+```csharp
+await platformEventEmitter.EmitAuditEventAsync(
+    new AuditEvent(
+        AuditEventId.NewId(),
+        DateTimeOffset.UtcNow,
+        PlatformEventNames.EmailSent,
+        "Transactional email sent",
+        EventOutcome.Success,
+        new[] { new EventAnchor("Email", message.MessageKey, "Subject") },
+        correlation: correlationContext),
+    cancellationToken);
+```
+## Troubleshooting
+
+### Duplicate sends
+
+- Ensure `MessageKey` is stable and deterministic for the logical email.
+- Confirm `IIdempotencyStore` persists across workers and restarts.
+- If duplicates persist, verify the outbox topic, correlation id, and policy behavior.
+
+### Send barrages (too many emails)
+
+- Add or tighten an `IEmailSendPolicy` rate limit.
+- Consider per-recipient limits to prevent accidental bursts.
+- Reduce `EmailOutboxProcessorOptions.BatchSize` if the provider has strict caps.
+
+### Poison messages
+
+- Messages marked `FailedPermanent` exceeded retries or had permanent errors.
+- Inspect `IEmailDeliverySink` records to correlate provider errors and payloads.
+
+### Correlation and tracking
+
+- Use `MessageKey` in logs and persistence as the primary key.
+- If the provider returns an id, record it in `IEmailDeliverySink` for lookup.
+- Ensure provider metadata includes `MessageKey` to correlate webhook events.

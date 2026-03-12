@@ -1,0 +1,50 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Incursa.Integrations.Cloudflare.CustomDomains/Incursa.Integrations.Cloudflare.CustomDomains.csproj" />
+    <Project Path="src/Incursa.Integrations.Cloudflare.Dns/Incursa.Integrations.Cloudflare.Dns.csproj" />
+    <Project Path="src/Incursa.Integrations.Cloudflare.KvProbe/Incursa.Integrations.Cloudflare.KvProbe.csproj" />
+    <Project Path="src/Incursa.Integrations.Cloudflare/Incursa.Integrations.Cloudflare.csproj" />
+    <Project Path="src/Incursa.Integrations.ElectronicNotary.Abstractions/Incursa.Integrations.ElectronicNotary.Abstractions.csproj" />
+    <Project Path="src/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore/Incursa.Integrations.ElectronicNotary.Proof.AspNetCore.csproj" />
+    <Project Path="src/Incursa.Integrations.ElectronicNotary.Proof/Incursa.Integrations.ElectronicNotary.Proof.csproj" />
+    <Project Path="src/Incursa.Integrations.ElectronicNotary/Incursa.Integrations.ElectronicNotary.csproj" />
+    <Project Path="src/Incursa.Integrations.Storage.Azure/Incursa.Integrations.Storage.Azure.csproj" />
+    <Project Path="src/Incursa.Integrations.Stripe/Incursa.Integrations.Stripe.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS.Abstractions/Incursa.Integrations.WorkOS.Abstractions.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS.Access/Incursa.Integrations.WorkOS.Access.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS.AspNetCore/Incursa.Integrations.WorkOS.AspNetCore.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS.Audit/Incursa.Integrations.WorkOS.Audit.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS.Webhooks/Incursa.Integrations.WorkOS.Webhooks.csproj" />
+    <Project Path="src/Incursa.Integrations.WorkOS/Incursa.Integrations.WorkOS.csproj" />
+    <Project Path="src/Incursa.Platform.Email.Postgres/Incursa.Platform.Email.Postgres.csproj" />
+    <Project Path="src/Incursa.Platform.Email.Postmark/Incursa.Platform.Email.Postmark.csproj" />
+    <Project Path="src/Incursa.Platform.Email.SqlServer/Incursa.Platform.Email.SqlServer.csproj" />
+    <Project Path="src/Incursa.Platform.InMemory/Incursa.Platform.InMemory.csproj" />
+    <Project Path="src/Incursa.Platform.Postgres/Incursa.Platform.Postgres.csproj" />
+    <Project Path="src/Incursa.Platform.SqlServer/Incursa.Platform.SqlServer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Incursa.Integrations.Cloudflare.IntegrationTests/Incursa.Integrations.Cloudflare.IntegrationTests.csproj" />
+    <Project Path="tests/Incursa.Integrations.Cloudflare.Tests/Incursa.Integrations.Cloudflare.Tests.csproj" />
+    <Project Path="tests/Incursa.Integrations.ElectronicNotary.Tests/Incursa.Integrations.ElectronicNotary.Tests.csproj" />
+    <Project Path="tests/Incursa.Integrations.Storage.Azure.Tests/Incursa.Integrations.Storage.Azure.Tests.csproj" />
+    <Project Path="tests/Incursa.Integrations.WorkOS.Audit.Tests/Incursa.Integrations.WorkOS.Audit.Tests.csproj" />
+    <Project Path="tests/Incursa.Integrations.WorkOS.Tests/Incursa.Integrations.WorkOS.Tests.csproj" />
+    <Project Path="tests/Incursa.Integrations.WorkOS.Webhooks.Tests/Incursa.Integrations.WorkOS.Webhooks.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Access.Tests/Incursa.Platform.Access.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.CustomDomains.Tests/Incursa.Platform.CustomDomains.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Dns.Tests/Incursa.Platform.Dns.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Email.Tests/Incursa.Platform.Email.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.InMemory.Tests/Incursa.Platform.InMemory.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Postgres.Tests/Incursa.Platform.Postgres.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Smoke.AppHost/Incursa.Platform.Smoke.AppHost.csproj" />
+    <Project Path="tests/Incursa.Platform.Smoke.ServiceDefaults/Incursa.Platform.Smoke.ServiceDefaults.csproj" />
+    <Project Path="tests/Incursa.Platform.SmokeWeb/Incursa.Platform.SmokeWeb.csproj" />
+    <Project Path="tests/Incursa.Platform.SqlServer.Tests/Incursa.Platform.SqlServer.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/" />
+  <Folder Name="/tools/migrations/" />
+  <Folder Name="/tools/migrations/src/">
+    <Project Path="tools/migrations/src/Incursa.Platform.SchemaMigrations.Cli/Incursa.Platform.SchemaMigrations.Cli.csproj" />
+  </Folder>
+</Solution>

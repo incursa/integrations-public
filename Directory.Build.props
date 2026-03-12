@@ -1,0 +1,148 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="2.0.2" />
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);MA0051;CA1848;CA1873;NU5104</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <!-- Packages are opt-in via explicit project metadata and the package catalog. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- Keep global Using directives -->
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' AND '$(MSBuildProjectExtension)' != '.sqlproj' AND $(MSBuildProjectName.StartsWith('Incursa.Generators')) == false AND $(MSBuildProjectName.StartsWith('Incursa.Database')) == false">
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.IO" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Net.Http" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Nodes" />
+    <Using Include="System.Text.Json.Serialization" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+  </ItemGroup>
+
+  <!-- Keep core project references and build tooling -->
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' AND '$(MSBuildProjectExtension)' != '.sqlproj' AND $(MSBuildProjectName.StartsWith('Incursa.Database')) == false">
+    <RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true" />
+
+    <!-- Keep InternalsVisibleTo -->
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+    </AssemblyAttribute>
+
+    <!-- Keep SourceLink, ReproducibleBuilds, GitVersion -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Version="10.0.102" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.1" PrivateAssets="All" />
+
+    <!-- <PackageReference Include="StyleCop.Analyzers" Condition="$(MSBuildProjectExtension) == '.csproj'" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference> -->
+    <!-- <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Condition="$(MSBuildProjectName.EndsWith('Tests')) == false" Version="4.14.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference> -->
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Condition="$(MSBuildProjectExtension) == '.csproj'" Version="4.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.CodeAnalysis.Analyzers" Condition="$(MSBuildProjectExtension) == '.csproj'" Version="4.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Condition="$(MSBuildProjectExtension) == '.csproj'" Version="4.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Meziantou.Analyzer" Condition="$(MSBuildProjectExtension) == '.csproj'" Version="2.0.286">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj' AND '$(MSBuildProjectName)' != 'Incursa.Platform.Observability.Analyzers' AND '$(MSBuildProjectName)' != 'Incursa.Platform.Smoke.AppHost'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\platform\tools\observability\src\Incursa.Platform.Observability.Analyzers\Incursa.Platform.Observability.Analyzers.csproj"
+                       OutputItemType="Analyzer"
+                       ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Keep Test Project settings -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests')) OR $(MSBuildProjectName.EndsWith('Test'))">
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <HasRuntimeOutput>true</HasRuntimeOutput>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <NoWarn>$(NoWarn);MA0004</NoWarn>
+  </PropertyGroup>
+
+  <!-- Keep Test Project references -->
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests')) OR $(MSBuildProjectName.EndsWith('Test'))">
+    <Using Include="Shouldly" />
+    <Using Include="Xunit" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <!-- Keep NSubstitute analyzers as they are usually helpful and specific to tests -->
+    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Castle.Core" Version="5.2.1" />
+    <PackageReference Update="dbup-core" Version="6.0.15" />
+    <PackageReference Update="DiffEngine" Version="18.3.0" />
+    <PackageReference Update="EmptyFiles" Version="8.17.1" />
+    <PackageReference Update="FluentValidation" Version="12.1.1" />
+    <PackageReference Update="Microsoft.Bcl.AsyncInterfaces" Version="10.0.2" />
+    <PackageReference Update="Microsoft.Extensions.Caching.Abstractions" Version="10.0.2" />
+    <PackageReference Update="Microsoft.Extensions.Caching.Memory" Version="10.0.2" />
+    <PackageReference Update="Microsoft.Identity.Client" Version="4.81.0" />
+    <PackageReference Update="Microsoft.Identity.Client.Extensions.Msal" Version="4.81.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Abstractions" Version="8.15.0" />
+    <PackageReference Update="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Logging" Version="8.15.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols" Version="8.15.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.15.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
+    <PackageReference Update="Microsoft.Testing.Extensions.Telemetry" Version="2.0.2" />
+    <PackageReference Update="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="2.0.2" />
+    <PackageReference Update="Microsoft.Testing.Platform" Version="2.0.2" />
+    <PackageReference Update="Microsoft.Testing.Platform.MSBuild" Version="2.0.2" />
+    <PackageReference Update="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Update="System.ClientModel" Version="1.8.1" />
+    <PackageReference Update="System.CodeDom" Version="10.0.2" />
+    <PackageReference Update="System.Configuration.ConfigurationManager" Version="10.0.2" />
+    <PackageReference Update="System.Diagnostics.EventLog" Version="10.0.2" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageReference Update="System.Management" Version="10.0.2" />
+    <PackageReference Update="System.Memory.Data" Version="10.0.2" />
+    <PackageReference Update="System.Security.Cryptography.Pkcs" Version="10.0.2" />
+    <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+</Project>

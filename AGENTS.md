@@ -1,0 +1,80 @@
+# Repository Guidelines
+
+## Early Repo Orientation (run first)
+We do not have LSP, so run these skills first to build a semantic picture and avoid guessing.
+- dotnet-repo-discovery: Generate the solution map. Run: `pwsh -File .codex/skills/dotnet-repo-discovery/scripts/discover-dotnet-repo.ps1`
+- dotnet-build-diagnostics: Capture build diagnostics with a binlog and summary. Run: `pwsh -File .codex/skills/dotnet-build-diagnostics/scripts/run-build-diagnostics.ps1`
+- dotnet-test-triage (only when tests are involved or the build touches test projects): Capture failing tests and a rerun filter. Run: `bash .codex/skills/dotnet-test-triage/scripts/run-test-triage.sh`
+- dotnet-format-analyzers (only before finalizing a PR / when touching C# code style): Verify formatting and analyzers. Run: `pwsh -File .codex/skills/dotnet-format-analyzers/scripts/run-format-analyzers.ps1`
+- dotnet-symbol-grep-recipes: Use rg navigation recipes during investigation. Run: `rg -n "\b(class|interface|record|struct)\s+<Name>\b" -g "*.cs"`
+
+## LLM Context File (llms.txt)
+- Read `llms.txt` at the start of any task to understand the repository's curated map and key references.
+- Keep `llms.txt` up to date whenever repository structure, documentation, or core workflows change.
+
+Decision checklist:
+- If the task mentions build failures or compiler errors, run dotnet-build-diagnostics.
+- If the task mentions failing tests or modifying code with tests, run dotnet-test-triage.
+- If adding/modifying C# files, run dotnet-format-analyzers before final output.
+
+Expected artifacts:
+- `artifacts/codex/solution-map.json` and `artifacts/codex/solution-map.md`
+- `artifacts/codex/build.binlog` and `artifacts/codex/build-summary.txt`
+- `artifacts/codex/test-failures.md` and `artifacts/codex/test-filter.txt`
+- `artifacts/codex/format-report.txt` (if applicable)
+- `artifacts/codex/test-results/smoke/`, `blocking/`, `observational/`, and `advisory/` for lane-specific test evidence
+- `artifacts/codex/coverage/advisory/` for advisory Workbench-observed coverage evidence
+- `artifacts/quality/testing/` for normalized Workbench quality outputs
+
+## Project Structure & Module Organization
+The core libraries live under `src/`, with `Incursa.Platform` as the main package and `Incursa.Platform.Modularity.*` for modularity layers. SQL Server artifacts and schemas are under `src/Incursa.Platform.SqlServer/Database/`. Tests live in `tests/Incursa.Platform.Tests/`. Supporting docs are in `docs/` and `specs/`, scripts in `scripts/`, and assets in `assets/`. The primary solution files are `Incursa.Integrations.Public.slnx` and `Incursa.Integrations.Public.CI.slnx` (used by CI).
+
+## Build, Test, and Development Commands
+- Before running build or test commands, complete the "Early Repo Orientation (run first)" section.
+- `dotnet restore Incursa.Integrations.Public.CI.slnx` restores dependencies.
+- `dotnet tool restore` installs local tools (for example, `sqlpackage` and the repo-pinned `workbench` CLI).
+- `dotnet build Incursa.Integrations.Public.CI.slnx -c Release` builds all projects.
+- `dotnet test Incursa.Integrations.Public.CI.slnx -c Release` runs the full test suite.
+- `dotnet test --filter "Category!=Integration"` runs fast unit tests only.
+- `dotnet test --filter "Category=Integration"` runs Docker-backed integration tests.
+- `pwsh -File scripts/quality/run-smoke-tests.ps1` runs the curated smoke lane.
+- `pwsh -File scripts/quality/run-blocking-tests.ps1` runs the required CI-safe blocking lane.
+- `pwsh -File scripts/quality/run-observational-tests.ps1` runs the non-blocking `KnownIssue` lane.
+- `pwsh -File scripts/quality/run-advisory-quality-tests.ps1` produces advisory TRX and Cobertura evidence.
+- `pwsh -File scripts/quality/run-quality-evidence.ps1` runs the advisory lane and Workbench sync/show together.
+- `dotnet tool run workbench quality sync --contract docs/30-contracts/test-gate.contract.yaml --results artifacts/codex/test-results/advisory --coverage artifacts/codex/coverage/advisory --out-dir artifacts/quality/testing` normalizes the latest advisory evidence into `artifacts/quality/testing/`.
+- `dotnet tool run workbench quality show` prints the latest normalized Workbench quality summary.
+- `dotnet format --verify-no-changes Incursa.Integrations.Public.CI.slnx` enforces formatting in CI.
+- `dotnet pack Incursa.Integrations.Public.CI.slnx -c Release -o ./nupkgs` produces NuGet packages.
+
+## Package Versioning Workflow
+- Packable projects are versioned independently through `eng/package-versions.json`.
+- Do not use a repo-wide `-p:Version=` or `-p:PackageVersion=` override when selectively packing publishable packages; it can rewrite internal `ProjectReference` dependencies to versions that do not exist on the feed.
+- Before committing packable code changes, run `pwsh -File eng/Apply-VersionPlan.ps1 -Base origin/main -Head HEAD`.
+- Review the resulting changes to `eng/package-versions.json` and the affected packable `.csproj` files, then commit them alongside the code changes.
+- To inspect the computed bump set without editing files, run `pwsh -File eng/Resolve-VersionPlan.ps1 -Base origin/main -Head HEAD -AsJson`.
+- For a one-time scheme migration or feed reset above prior published versions, run `pwsh -File eng/Set-PackageVersionBaseline.ps1 -Version <semver>`.
+- The default bump is `patch` for changed packable projects plus packable reverse dependents. If a package needs a stronger bump, supply overrides to `eng/Resolve-VersionPlan.ps1` / `eng/Apply-VersionPlan.ps1`.
+- CI and the local pre-commit hook use `pwsh -File eng/Test-PackageVersionChanges.ps1 ...` to flag packable changes that skipped a required version bump.
+- If `eng/package-versions.json` does not exist yet in the comparison base, the guard warns and skips. After the bootstrap commit lands, it enforces normally.
+- If the hook is not active in a local clone, run `pwsh -File scripts/setup-git-hooks.ps1`.
+
+## Coding Style & Naming Conventions
+Formatting is driven by `.editorconfig`: 4-space indentation for C#, CRLF line endings, and trimmed trailing whitespace. JSON and Markdown use 2-space indentation. StyleCop settings live in `stylecop.json`; analyzers include Roslynator, Meziantou, and BannedApiAnalyzers. Prefer PascalCase for public types/members and camelCase for locals/parameters/fields. Use explicit `StringComparison` values as required by analyzer rules.
+
+## Testing Guidelines
+Tests use xUnit v3 with Shouldly and NSubstitute. Integration tests use Docker SQL Server via Testcontainers; tag them with `[Trait("Category", "Integration")]` and `[Trait("RequiresDocker", "true")]`, and place them in the shared `SqlServerCollection` for container reuse. Unit tests should be tagged `[Trait("Category", "Unit")]`. See `tests/Incursa.Platform.Tests/README.md` for test patterns.
+
+## Workbench Quality Workflow
+- Authored testing intent is canonical at `docs/30-contracts/test-gate.contract.yaml`.
+- Smoke, blocking, observational, and advisory test results should be written to their lane-specific roots under `artifacts/codex/test-results/`.
+- Workbench ingestion in this repo reads the advisory lane from `artifacts/codex/test-results/advisory/` and `artifacts/codex/coverage/advisory/`.
+- Generated Workbench outputs under `artifacts/quality/testing/` are derived artifacts and must not be hand-edited.
+- The local agent skill for this flow is `.codex/skills/workbench-quality-evidence/SKILL.md`.
+- The Workbench quality report is advisory only; do not turn it into a merge gate in this pass.
+
+## Commit & Pull Request Guidelines
+Commit messages follow an imperative, sentence-case style (for example, "Add ...") and often include a PR reference in parentheses like `(#123)`. For PRs, include a concise description of changes, relevant testing notes (commands and filters used), and doc updates or screenshots when behavior or APIs change. Link related issues where applicable.
+
+## Configuration & Tooling Notes
+The repo pins the .NET SDK in `global.json` (currently 10.0.103). If builds fail locally, verify the SDK version and run `dotnet tool restore` before building or testing.
