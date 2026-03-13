@@ -4,9 +4,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <Deterministic>true</Deterministic>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <PackageId>Incursa.Platform.AzureStorage</PackageId>
-    <Version>6.0.5</Version>
+    <Version>6.0.6</Version>
     <Authors>Incursa</Authors>
     <Owners>Incursa</Owners>
     <Description>Azure Storage provider for Incursa Platform outbox, inbox, scheduler, leases, fanout, and external side effects.</Description>
