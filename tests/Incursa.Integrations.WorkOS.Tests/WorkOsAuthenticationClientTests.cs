@@ -26,7 +26,7 @@ public sealed class WorkOsAuthenticationClientTests
                 capturedRequest = request;
                 var formBody = await request.Content!.ReadAsStringAsync().ConfigureAwait(false);
 
-                Assert.AreEqual(new Uri("https://auth.example.test/user_management/authenticate"), request.RequestUri);
+                Assert.AreEqual(new Uri("https://api.example.test/user_management/authenticate"), request.RequestUri);
                 Assert.IsTrue(formBody.Contains("grant_type=refresh_token", StringComparison.Ordinal));
                 Assert.IsTrue(formBody.Contains("refresh_token=refresh-token-original", StringComparison.Ordinal));
                 Assert.IsTrue(formBody.Contains("organization_id=org_456", StringComparison.Ordinal));
@@ -89,6 +89,79 @@ public sealed class WorkOsAuthenticationClientTests
         Assert.AreEqual(
             new Uri("https://auth.example.test/user_management/sessions/logout?session_id=session_123&return_to=https%3A%2F%2Fapp.example.test%2Fsigned-out"),
             result.LogoutUrl);
+    }
+
+    [TestMethod]
+    public async Task AuthenticateWithPasswordAsync_CustomAuthDomain_UsesApiBaseUri_AndHandlesHtmlErrorsAsync()
+    {
+        var options = CreateOptions();
+        HttpRequestMessage? capturedRequest = null;
+        var client = new WorkOsAuthenticationClient(
+            new HttpClient(new StubHandler(request =>
+            {
+                capturedRequest = request;
+                return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound)
+                {
+                    Content = new StringContent("<html><body>not found</body></html>", Encoding.UTF8, "text/html"),
+                });
+            })),
+            Options.Create(options));
+
+        var result = await client.AuthenticateWithPasswordAsync(
+            new WorkOsPasswordAuthenticationRequest("ada@example.com", "bad-password"),
+            CancellationToken.None);
+
+        Assert.IsNotNull(capturedRequest);
+        Assert.AreEqual(new Uri("https://api.example.test/user_management/authenticate"), capturedRequest.RequestUri);
+        var failure = result as WorkOsAuthenticationFailure;
+        Assert.IsNotNull(failure);
+        Assert.AreEqual("workos_endpoint_not_found", failure.Failure.Code);
+        Assert.AreEqual(
+            "Authentication could not be completed because the WorkOS authentication endpoint was not found.",
+            failure.Failure.Message);
+        Assert.IsFalse(failure.Failure.IsTransient);
+    }
+
+    [TestMethod]
+    public async Task CompleteOrganizationSelectionAsync_StringAuthenticationMethod_DeserializesSuccessfullyAsync()
+    {
+        var options = CreateOptions();
+        var accessToken = CreateUnsignedAccessToken("user_789");
+        HttpRequestMessage? capturedRequest = null;
+        var client = new WorkOsAuthenticationClient(
+            new HttpClient(new StubHandler(request =>
+            {
+                capturedRequest = request;
+                return Task.FromResult(JsonResponse(
+                    """
+                    {
+                      "user": {
+                        "id": "user_789",
+                        "email": "grace@example.com",
+                        "first_name": "Grace",
+                        "last_name": "Hopper",
+                        "email_verified": true
+                      },
+                      "organization_id": "org_789",
+                      "access_token": "__ACCESS_TOKEN__",
+                      "refresh_token": "refresh-token-org",
+                      "authentication_method": "sso"
+                    }
+                    """.Replace("__ACCESS_TOKEN__", accessToken, StringComparison.Ordinal)));
+            })),
+            Options.Create(options));
+
+        var result = await client.CompleteOrganizationSelectionAsync(
+            new WorkOsOrganizationSelectionRequest("pending-token", "org_789"),
+            CancellationToken.None);
+
+        Assert.IsNotNull(capturedRequest);
+        Assert.AreEqual(new Uri("https://api.example.test/user_management/authenticate"), capturedRequest.RequestUri);
+        var success = result as WorkOsAuthenticationSuccess;
+        Assert.IsNotNull(success);
+        Assert.AreEqual("grace@example.com", success.Session.Email);
+        Assert.AreEqual("org_789", success.Session.Claims.OrganizationId);
+        Assert.AreEqual("refresh-token-org", success.Session.RefreshToken);
     }
 
     [TestMethod]

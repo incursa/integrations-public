@@ -363,7 +363,7 @@ internal sealed class WorkOsAuthenticationClient :
     {
         using var message = CreateFormRequest(
             HttpMethod.Post,
-            new Uri(options.GetAuthApiBaseUri(), options.AuthenticatePath),
+            new Uri(options.GetApiBaseUri(), options.AuthenticatePath),
             form);
         using var response = await httpClient.SendAsync(message, cancellationToken).ConfigureAwait(false);
         var payload = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
@@ -373,7 +373,7 @@ internal sealed class WorkOsAuthenticationClient :
             return new WorkOsAuthenticationSuccess(MapSession(Deserialize<AuthenticationSuccessDto>(payload)));
         }
 
-        return MapError(payload);
+        return MapError(response.StatusCode, payload);
     }
 
     private WorkOsAuthenticatedSession MapSession(AuthenticationSuccessDto dto)
@@ -405,9 +405,34 @@ internal sealed class WorkOsAuthenticationClient :
             accessTokenExpiresAtUtc: claims.ExpiresAtUtc);
     }
 
-    private static WorkOsAuthenticationResult MapError(string payload)
+    private static WorkOsAuthenticationResult MapError(HttpStatusCode statusCode, string payload)
     {
-        var error = Deserialize<AuthenticationErrorDto>(payload);
+        if (!TryDeserialize(payload, out AuthenticationErrorDto? error) || error is null)
+        {
+            var fallbackCode = statusCode switch
+            {
+                HttpStatusCode.NotFound => "workos_endpoint_not_found",
+                HttpStatusCode.Unauthorized => "workos_auth_rejected",
+                HttpStatusCode.Forbidden => "workos_auth_forbidden",
+                HttpStatusCode.TooManyRequests => "workos_rate_limited",
+                _ when (int)statusCode >= 500 => "workos_unavailable",
+                _ => "authentication_failed",
+            };
+
+            var fallbackMessage = statusCode switch
+            {
+                HttpStatusCode.NotFound => "Authentication could not be completed because the WorkOS authentication endpoint was not found.",
+                HttpStatusCode.TooManyRequests => "Authentication is temporarily rate limited. Try again in a moment.",
+                _ when (int)statusCode >= 500 => "Authentication is temporarily unavailable. Try again in a moment.",
+                _ => "Authentication could not be completed. Try again.",
+            };
+
+            return new WorkOsAuthenticationFailure(new WorkOsFailure(
+                fallbackCode,
+                fallbackMessage,
+                statusCode == HttpStatusCode.TooManyRequests || (int)statusCode >= 500));
+        }
+
         var code = FirstNonEmpty(error.Code, error.Error) ?? "authentication_failed";
         var message = FirstNonEmpty(error.Message, error.ErrorDescription) ?? "Authentication failed.";
 
@@ -441,6 +466,25 @@ internal sealed class WorkOsAuthenticationClient :
             pending,
             code,
             message);
+    }
+
+    private static bool TryDeserialize<T>(string payload, out T? value)
+    {
+        try
+        {
+            value = JsonSerializer.Deserialize<T>(payload, WorkOsJsonDefaults.SerializerOptions);
+            return value is not null;
+        }
+        catch (JsonException)
+        {
+            value = default;
+            return false;
+        }
+        catch (NotSupportedException)
+        {
+            value = default;
+            return false;
+        }
     }
 
     private Uri? BuildLogoutUrl(string? sessionId, string? returnTo)

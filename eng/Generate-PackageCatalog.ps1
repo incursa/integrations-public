@@ -168,7 +168,7 @@ function Get-CatalogMetadata {
             }
         }
 
-        if ($ProjectName -in @("Incursa.Platform.SqlServer", "Incursa.Platform.Postgres", "Incursa.Platform.InMemory")) {
+        if ($ProjectName -in @("Incursa.Platform.AzureStorage", "Incursa.Platform.SqlServer", "Incursa.Platform.Postgres", "Incursa.Platform.InMemory")) {
             return [ordered]@{
                 zone = "src"
                 category = "providers"

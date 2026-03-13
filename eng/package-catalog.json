@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-11T20:44:43.2224223-06:00",
+  "generatedAt": "2026-03-12T23:30:47.4311730-06:00",
   "generatedBy": "eng/Generate-PackageCatalog.ps1",
   "projects": [
     {
@@ -199,6 +199,20 @@
       "notes": "Capability-specific provider adapter package."
     },
     {
+      "projectPath": "src/Incursa.Platform.AzureStorage/Incursa.Platform.AzureStorage.csproj",
+      "packageId": "Incursa.Platform.AzureStorage",
+      "zone": "src",
+      "category": "providers",
+      "classification": "public-packable",
+      "packable": true,
+      "publishable": true,
+      "origin": {
+        "kind": "existing-repo",
+        "sourcePath": "C:/src/incursa/integrations-public"
+      },
+      "notes": "Provider implementation package."
+    },
+    {
       "projectPath": "src/Incursa.Platform.Email.Postgres/Incursa.Platform.Email.Postgres.csproj",
       "packageId": "Incursa.Platform.Email.Postgres",
       "zone": "src",
@@ -383,6 +397,20 @@
     {
       "projectPath": "tests/Incursa.Platform.Access.Tests/Incursa.Platform.Access.Tests.csproj",
       "packageId": "Incursa.Platform.Access.Tests",
+      "zone": "tests",
+      "category": "tests",
+      "classification": "test-only",
+      "packable": false,
+      "publishable": false,
+      "origin": {
+        "kind": "existing-repo",
+        "sourcePath": "C:/src/incursa/integrations-public"
+      },
+      "notes": "Automated test project."
+    },
+    {
+      "projectPath": "tests/Incursa.Platform.AzureStorage.Tests/Incursa.Platform.AzureStorage.Tests.csproj",
+      "packageId": "Incursa.Platform.AzureStorage.Tests",
       "zone": "tests",
       "category": "tests",
       "classification": "test-only",

@@ -12,7 +12,7 @@
     <PackageReference Include="Incursa.Platform.Modularity.Razor" />
     <PackageReference Include="Incursa.Platform.Operations" />
     <PackageReference Include="Incursa.Platform.Audit" />
-    <ProjectReference Include="..\..\..\platform\tests\Incursa.Platform.TestUtilities\Incursa.Platform.TestUtilities.csproj" />
+    <PackageReference Include="Incursa.Platform.TestUtilities" />
     <PackageReference Include="Incursa.TestDocs.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

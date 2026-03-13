@@ -21,13 +21,7 @@ internal sealed class AuthenticationSuccessDto
     public string? SealedSession { get; set; }
 
     [JsonPropertyName("authentication_method")]
-    public AuthenticationMethodDto? AuthenticationMethod { get; set; }
-}
-
-internal sealed class AuthenticationMethodDto
-{
-    [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    public JsonElement? AuthenticationMethod { get; set; }
 }
 
 internal sealed class AuthenticationErrorDto

@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Incursa.Platform" />
     <ProjectReference Include="..\..\src\Incursa.Platform.InMemory\Incursa.Platform.InMemory.csproj" />
-    <ProjectReference Include="..\..\..\platform\tests\Incursa.Platform.TestUtilities\Incursa.Platform.TestUtilities.csproj" />
+    <PackageReference Include="Incursa.Platform.TestUtilities" />
     <PackageReference Include="Incursa.TestDocs.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

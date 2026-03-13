@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\src\Incursa.Platform.Postgres\Incursa.Platform.Postgres.csproj" />
     <PackageReference Include="Incursa.Platform.Modularity" />
     <PackageReference Include="Incursa.Platform.Modularity.Razor" />
-    <ProjectReference Include="..\..\..\platform\tests\Incursa.Platform.TestUtilities\Incursa.Platform.TestUtilities.csproj" />
+    <PackageReference Include="Incursa.Platform.TestUtilities" />
     <PackageReference Include="Incursa.TestDocs.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

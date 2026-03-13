@@ -43,6 +43,7 @@ Public integrations:
 
 Provider implementations with stable `Incursa.Platform.*` identities:
 
+- `src/Incursa.Platform.AzureStorage/`
 - `src/Incursa.Platform.Email.Postmark/`
 - `src/Incursa.Platform.Email.Postgres/`
 - `src/Incursa.Platform.Email.SqlServer/`
@@ -53,6 +54,7 @@ Provider implementations with stable `Incursa.Platform.*` identities:
 Supporting test/tooling projects retained here:
 
 - `tests/Incursa.Platform.Access.Tests/`
+- `tests/Incursa.Platform.AzureStorage.Tests/`
 - `tests/Incursa.Platform.CustomDomains.Tests/`
 - `tests/Incursa.Platform.Dns.Tests/`
 - `tests/Incursa.Platform.Email.Tests/`
@@ -77,6 +79,7 @@ Supporting test/tooling projects retained here:
 - `eng/Invoke-PreCommitVersionPlan.ps1`: pre-commit helper that resolves staged impact, auto-applies required version bumps, stages the generated manifest/project updates, and re-validates the result
 - `eng/Test-PackageVersionChanges.ps1`: validates that affected packable projects include version bumps
 - `eng/Pack-PublicPackages.ps1`: packs only catalog-allowlisted projects
+- `docs/azure-storage-platform-provider-adr.md`: Azure Storage provider mapping, guarantees, unsupported behaviors, and repair strategy
 - `docs/repo-split-plan.md`: classification and split plan used for the extraction
 - `docs/repository-split-summary.md`: what moved here and what still depends on `platform`
 

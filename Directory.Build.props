@@ -74,9 +74,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj' AND '$(MSBuildProjectName)' != 'Incursa.Platform.Observability.Analyzers' AND '$(MSBuildProjectName)' != 'Incursa.Platform.Smoke.AppHost'">
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\platform\tools\observability\src\Incursa.Platform.Observability.Analyzers\Incursa.Platform.Observability.Analyzers.csproj"
-                       OutputItemType="Analyzer"
-                       ReferenceOutputAssembly="false" />
+    <PackageReference Include="Incursa.Platform.Observability.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <!-- Keep Test Project settings -->

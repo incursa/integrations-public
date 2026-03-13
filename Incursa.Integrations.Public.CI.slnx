@@ -14,6 +14,7 @@
     <Project Path="src/Incursa.Integrations.WorkOS.Audit/Incursa.Integrations.WorkOS.Audit.csproj" />
     <Project Path="src/Incursa.Integrations.WorkOS.Webhooks/Incursa.Integrations.WorkOS.Webhooks.csproj" />
     <Project Path="src/Incursa.Integrations.WorkOS/Incursa.Integrations.WorkOS.csproj" />
+    <Project Path="src/Incursa.Platform.AzureStorage/Incursa.Platform.AzureStorage.csproj" />
     <Project Path="src/Incursa.Platform.Email.Postgres/Incursa.Platform.Email.Postgres.csproj" />
     <Project Path="src/Incursa.Platform.Email.Postmark/Incursa.Platform.Email.Postmark.csproj" />
     <Project Path="src/Incursa.Platform.Email.SqlServer/Incursa.Platform.Email.SqlServer.csproj" />
@@ -30,6 +31,7 @@
     <Project Path="tests/Incursa.Integrations.WorkOS.Tests/Incursa.Integrations.WorkOS.Tests.csproj" />
     <Project Path="tests/Incursa.Integrations.WorkOS.Webhooks.Tests/Incursa.Integrations.WorkOS.Webhooks.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Access.Tests/Incursa.Platform.Access.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.AzureStorage.Tests/Incursa.Platform.AzureStorage.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.CustomDomains.Tests/Incursa.Platform.CustomDomains.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Dns.Tests/Incursa.Platform.Dns.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Email.Tests/Incursa.Platform.Email.Tests.csproj" />
