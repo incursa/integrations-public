@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -8,7 +8,7 @@
     <Description>ASP.NET Core hosting glue for Incursa WorkOS integrations, including middleware, endpoints, and app-auth HTTP wiring.</Description>
     <PackageTags>incursa;workos;aspnetcore;middleware;webhooks;authentication;authorization;dotnet</PackageTags>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>6.0.4</Version>
+    <Version>6.0.5</Version>
     <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
