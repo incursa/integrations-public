@@ -53,7 +53,7 @@
     {
       "packageId": "Incursa.Integrations.WorkOS.AspNetCore",
       "projectPath": "src/Incursa.Integrations.WorkOS.AspNetCore/Incursa.Integrations.WorkOS.AspNetCore.csproj",
-      "version": "6.0.7"
+      "version": "6.0.8"
     },
     {
       "packageId": "Incursa.Integrations.WorkOS.Audit",

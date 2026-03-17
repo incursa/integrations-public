@@ -80,6 +80,7 @@ Supporting test/tooling projects retained here:
 - `eng/Test-PackageVersionChanges.ps1`: validates that affected packable projects include version bumps
 - `eng/Pack-PublicPackages.ps1`: packs only catalog-allowlisted projects
 - `docs/azure-storage-platform-provider-adr.md`: Azure Storage provider mapping, guarantees, unsupported behaviors, and repair strategy
+- `docs/azure-storage-llm-reference.md`: cross-repo Azure Storage map covering raw storage contracts, Azure substrate implementations, platform inbox/outbox mechanics, options, and tests
 - `docs/repo-split-plan.md`: classification and split plan used for the extraction
 - `docs/repository-split-summary.md`: what moved here and what still depends on `platform`
 
@@ -96,7 +97,10 @@ When tests are involved:
 
 ```bash
 bash .codex/skills/dotnet-test-triage/scripts/run-test-triage.sh
+dotnet test tests/Incursa.Platform.AzureStorage.Tests/Incursa.Platform.AzureStorage.Tests.csproj --filter "Category=Stress"
 ```
+
+The Azure Storage stress lane auto-starts an Azurite Docker container when `INCURSA_AZURE_STORAGE_CONNECTION_STRING` is unset. Set the connection string only when you want to override the default container with Azurite you started yourself or a real Azure Storage account.
 
 ## Validation commands
 
