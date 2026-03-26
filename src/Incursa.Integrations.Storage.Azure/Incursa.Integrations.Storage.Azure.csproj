@@ -5,7 +5,7 @@
     <IsPackable>true</IsPackable>
     <Deterministic>true</Deterministic>
     <PackageId>Incursa.Integrations.Storage.Azure</PackageId>
-    <Version>6.0.6</Version>
+    <Version>6.0.9</Version>
     <Authors>Incursa</Authors>
     <Owners>Incursa</Owners>
     <Description>Azure Tables, Blobs, and Queues provider for Incursa.Platform.Storage.</Description>
