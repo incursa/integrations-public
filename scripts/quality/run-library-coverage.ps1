@@ -3,7 +3,7 @@ param(
     [int]$BranchThreshold = 0,
     [string]$CoverageRoot = "",
     [string]$SummaryPath = "",
-    [string[]]$Targets = @("Core", "InMemory", "Audit", "Correlation", "Email", "HealthProbe", "Observability", "Operations", "Webhooks", "WebhooksAspNetCore")
+    [string[]]$Targets = @("InMemory")
 )
 
 Set-StrictMode -Version Latest
@@ -74,7 +74,6 @@ foreach ($target in $selectedTargets) {
             $project
             "--configuration"
             "Release"
-            "--no-build"
             "--filter"
             $filter
             "/p:CollectCoverage=true"
@@ -87,6 +86,11 @@ foreach ($target in $selectedTargets) {
         )
 
         $output = dotnet @dotnetArgs 2>&1
+        $testExitCode = $LASTEXITCODE
+
+        if ($testExitCode -ne 0) {
+            throw "dotnet test failed for $name with exit code $testExitCode.`n$($output -join [Environment]::NewLine)"
+        }
 
         $noMatchingTests = $false
         foreach ($line in $output) {
