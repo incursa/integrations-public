@@ -28,9 +28,9 @@ try {
 }
 
 $configs = @(
-    "scripts/quality/stryker/sqlserver.stryker-config.json",
-    "scripts/quality/stryker/postgres.stryker-config.json",
-    "scripts/quality/stryker/inmemory.stryker-config.json"
+    @{ Config = "scripts/quality/stryker/sqlserver.stryker-config.json"; WorkingDirectory = "tests/Incursa.Platform.SqlServer.Tests" },
+    @{ Config = "scripts/quality/stryker/postgres.stryker-config.json"; WorkingDirectory = "tests/Incursa.Platform.Postgres.Tests" },
+    @{ Config = "scripts/quality/stryker/inmemory.stryker-config.json"; WorkingDirectory = "tests/Incursa.Platform.InMemory.Tests" }
 )
 
 $summary = New-Object System.Collections.Generic.List[string]
@@ -42,15 +42,24 @@ $summary.Add("| Config | Result |")
 $summary.Add("| --- | --- |")
 
 $failures = 0
-foreach ($config in $configs) {
-    Write-Host "Running mutation tests with $config"
+foreach ($entry in $configs) {
+    $config = $entry.Config
+    $configPath = Join-Path $repoRoot $config
+    $workingDirectory = Join-Path $repoRoot $entry.WorkingDirectory
+    Write-Host "Running mutation tests with $config from $($entry.WorkingDirectory)"
     try {
-        $output = dotnet tool run dotnet-stryker -- --config-file $config 2>&1
-        $runExitCode = $LASTEXITCODE
-        $outputText = $output -join [Environment]::NewLine
+        Push-Location $workingDirectory
+        try {
+            $output = dotnet tool run dotnet-stryker -- --config-file $configPath 2>&1
+            $runExitCode = $LASTEXITCODE
+            $outputText = $output -join [Environment]::NewLine
+            Write-Host $outputText
+        } finally {
+            Pop-Location
+        }
 
         if ($runExitCode -ne 0 -or $outputText -match 'make the "dotnet-stryker" command available') {
-            throw "dotnet-stryker is not available for this run."
+            throw "dotnet-stryker failed for $config with exit code $runExitCode."
         }
 
         $summary.Add("| $config | Passed |")

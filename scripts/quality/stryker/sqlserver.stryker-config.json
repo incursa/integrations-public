@@ -1,9 +1,8 @@
 {
   "stryker-config": {
-    "solution": "Incursa.Integrations.Public.CI.slnx",
-    "project": "src/Incursa.Platform.SqlServer/Incursa.Platform.SqlServer.csproj",
+    "project": "Incursa.Platform.SqlServer.csproj",
     "test-projects": [
-      "tests/Incursa.Platform.SqlServer.Tests/Incursa.Platform.SqlServer.Tests.csproj"
+      "Incursa.Platform.SqlServer.Tests.csproj"
     ],
     "test-case-filter": "FullyQualifiedName~OptionsValidationTests|FullyQualifiedName~PlatformRegistrationTests|FullyQualifiedName~SqlPlatformRegistrationTests|FullyQualifiedName~DatabaseSchemaDeploymentTests",
     "reporters": [
@@ -17,11 +16,11 @@
       "break": 45
     },
     "mutate": [
-      "src/Incursa.Platform.SqlServer/Outbox/SqlOutboxOptionsValidator.cs",
-      "src/Incursa.Platform.SqlServer/Inbox/SqlInboxOptionsValidator.cs",
-      "src/Incursa.Platform.SqlServer/Fanout/SqlFanoutOptionsValidator.cs",
-      "src/Incursa.Platform.SqlServer/Scheduler/SqlSchedulerOptionsValidator.cs",
-      "src/Incursa.Platform.SqlServer/SqlPlatformServiceCollectionExtensions.cs"
+      "Outbox/SqlOutboxOptionsValidator.cs",
+      "Inbox/SqlInboxOptionsValidator.cs",
+      "Fanout/SqlFanoutOptionsValidator.cs",
+      "Scheduler/SqlSchedulerOptionsValidator.cs",
+      "SqlPlatformServiceCollectionExtensions.cs"
     ]
   }
 }
