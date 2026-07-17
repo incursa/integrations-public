@@ -1,9 +1,11 @@
 {
   "stryker-config": {
-    "project": "Incursa.Platform.InMemory.csproj",
+    "solution": "Incursa.Integrations.Public.slnx",
+    "project": "src/Incursa.Platform.InMemory/Incursa.Platform.InMemory.csproj",
     "test-projects": [
-      "Incursa.Platform.InMemory.Tests.csproj"
+      "tests/Incursa.Platform.InMemory.Tests/Incursa.Platform.InMemory.Tests.csproj"
     ],
+    "test-runner": "mtp",
     "reporters": [
       "progress",
       "html",

@@ -1,9 +1,11 @@
 {
   "stryker-config": {
-    "project": "Incursa.Platform.Postgres.csproj",
+    "solution": "Incursa.Integrations.Public.slnx",
+    "project": "src/Incursa.Platform.Postgres/Incursa.Platform.Postgres.csproj",
     "test-projects": [
-      "Incursa.Platform.Postgres.Tests.csproj"
+      "tests/Incursa.Platform.Postgres.Tests/Incursa.Platform.Postgres.Tests.csproj"
     ],
+    "test-runner": "mtp",
     "test-case-filter": "FullyQualifiedName~PostgresPublicApiContractTests|FullyQualifiedName~DatabaseSchemaDeploymentTests|FullyQualifiedName~ControlPlaneGlobalSchedulerTests",
     "reporters": [
       "progress",

@@ -1,9 +1,11 @@
 {
   "stryker-config": {
-    "project": "Incursa.Platform.SqlServer.csproj",
+    "solution": "Incursa.Integrations.Public.slnx",
+    "project": "src/Incursa.Platform.SqlServer/Incursa.Platform.SqlServer.csproj",
     "test-projects": [
-      "Incursa.Platform.SqlServer.Tests.csproj"
+      "tests/Incursa.Platform.SqlServer.Tests/Incursa.Platform.SqlServer.Tests.csproj"
     ],
+    "test-runner": "mtp",
     "test-case-filter": "FullyQualifiedName~OptionsValidationTests|FullyQualifiedName~PlatformRegistrationTests|FullyQualifiedName~SqlPlatformRegistrationTests|FullyQualifiedName~DatabaseSchemaDeploymentTests",
     "reporters": [
       "progress",
