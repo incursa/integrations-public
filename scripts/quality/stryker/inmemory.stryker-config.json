@@ -1,10 +1,11 @@
 {
   "stryker-config": {
-    "solution": "Incursa.Integrations.Public.CI.slnx",
+    "solution": "Incursa.Integrations.Public.slnx",
     "project": "src/Incursa.Platform.InMemory/Incursa.Platform.InMemory.csproj",
     "test-projects": [
       "tests/Incursa.Platform.InMemory.Tests/Incursa.Platform.InMemory.Tests.csproj"
     ],
+    "test-runner": "mtp",
     "reporters": [
       "progress",
       "html",
@@ -16,10 +17,10 @@
       "break": 45
     },
     "mutate": [
-      "src/Incursa.Platform.InMemory/InMemoryOutboxStore.cs",
-      "src/Incursa.Platform.InMemory/InMemoryInboxWorkStore.cs",
-      "src/Incursa.Platform.InMemory/InMemorySchedulerStore.cs",
-      "src/Incursa.Platform.InMemory/InMemorySystemLease.cs"
+      "InMemoryOutboxStore.cs",
+      "InMemoryInboxWorkStore.cs",
+      "InMemorySchedulerStore.cs",
+      "InMemorySystemLease.cs"
     ]
   }
 }

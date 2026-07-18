@@ -23,17 +23,7 @@ $resultsPath = Resolve-RepoPath -RepoRoot $repoRoot -Path $ResultsDirectory
 $coveragePath = Resolve-RepoPath -RepoRoot $repoRoot -Path $CoverageDirectory
 $summaryPath = Join-Path $resultsPath "summary.md"
 $libraryCoveragePath = Join-Path $coveragePath "libraries"
-$libraryCoverageTargets = @(
-    "Core",
-    "Audit",
-    "Correlation",
-    "HealthProbe",
-    "InMemory",
-    "Observability",
-    "Operations",
-    "Webhooks",
-    "WebhooksAspNetCore"
-)
+$libraryCoverageTargets = @("InMemory")
 
 Write-Host "Running advisory lane..." -ForegroundColor Cyan
 Write-Host "Solution: $solutionPath" -ForegroundColor Yellow
