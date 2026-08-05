@@ -46,8 +46,12 @@ foreach ($entry in $configs) {
     $config = $entry.Config
     $configPath = Join-Path $repoRoot $config
     $workingDirectory = Join-Path $repoRoot $entry.WorkingDirectory
+    $strykerOutputPath = Join-Path $repoRoot "StrykerOutput"
     Write-Host "Running mutation tests with $config from $($entry.WorkingDirectory)"
     try {
+        if (Test-Path -LiteralPath $strykerOutputPath) {
+            Remove-Item -LiteralPath $strykerOutputPath -Recurse -Force
+        }
         Push-Location $repoRoot
         try {
             $output = dotnet tool run dotnet-stryker -- --config-file $configPath 2>&1

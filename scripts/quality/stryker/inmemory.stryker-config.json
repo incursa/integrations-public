@@ -7,9 +7,7 @@
     ],
     "test-runner": "mtp",
     "reporters": [
-      "progress",
-      "html",
-      "json"
+      "progress"
     ],
     "thresholds": {
       "high": 70,

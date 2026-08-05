@@ -8,9 +8,7 @@
     "test-runner": "mtp",
     "test-case-filter": "FullyQualifiedName~OptionsValidationTests|FullyQualifiedName~PlatformRegistrationTests|FullyQualifiedName~SqlPlatformRegistrationTests|FullyQualifiedName~DatabaseSchemaDeploymentTests",
     "reporters": [
-      "progress",
-      "html",
-      "json"
+      "progress"
     ],
     "thresholds": {
       "high": 70,

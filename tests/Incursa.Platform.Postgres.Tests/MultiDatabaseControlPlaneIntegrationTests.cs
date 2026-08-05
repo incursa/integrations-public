@@ -117,8 +117,7 @@ public class MultiDatabaseControlPlaneIntegrationTests
         foreach (var db in tenants)
         {
             processed.ShouldContain($"payload-from-{db.Name}");
-            var dispatchedCount = await GetIsProcessedCountAsync(db);
-            dispatchedCount.ShouldBe(1, $"Expected one processed row in {db.Name}");
+            await WaitForProcessedAsync(db, expectedCount: 1, timeoutSeconds: 10);
         }
 
         await host.StopAsync(TestContext.Current.CancellationToken);
@@ -153,8 +152,7 @@ public class MultiDatabaseControlPlaneIntegrationTests
         await EnqueueTestMessagesAsync(host.Services, tenants, processed);
         await WaitForDispatchAsync(processed, tenants.Count, timeoutSeconds: 10);
 
-        var dispatchedCount = await GetIsProcessedCountAsync(tenants[0]);
-        dispatchedCount.ShouldBe(1);
+        await WaitForProcessedAsync(tenants[0], expectedCount: 1, timeoutSeconds: 10);
 
         await host.StopAsync(TestContext.Current.CancellationToken);
     }
@@ -190,8 +188,7 @@ public class MultiDatabaseControlPlaneIntegrationTests
 
         foreach (var db in tenants)
         {
-            var dispatchedCount = await GetIsProcessedCountAsync(db);
-            dispatchedCount.ShouldBe(1, $"Expected one processed row in {db.Name}");
+            await WaitForProcessedAsync(db, expectedCount: 1, timeoutSeconds: 10);
         }
 
         await host.StopAsync(TestContext.Current.CancellationToken);
@@ -226,8 +223,7 @@ public class MultiDatabaseControlPlaneIntegrationTests
         await EnqueueTestMessagesAsync(host.Services, tenants, processed);
         await WaitForDispatchAsync(processed, tenants.Count, timeoutSeconds: 10);
 
-        var dispatchedCount = await GetIsProcessedCountAsync(tenants[0]);
-        dispatchedCount.ShouldBe(1);
+        await WaitForProcessedAsync(tenants[0], expectedCount: 1, timeoutSeconds: 10);
 
         await host.StopAsync(TestContext.Current.CancellationToken);
     }
@@ -396,6 +392,26 @@ SELECT COUNT(*) FROM {outboxTable} WHERE "IsProcessed" = TRUE
         }
     }
 
+    private async Task WaitForProcessedAsync(
+        PlatformDatabase database,
+        int expectedCount,
+        int timeoutSeconds)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+        var dispatchedCount = 0;
+        while (dispatchedCount < expectedCount && DateTime.UtcNow < deadline)
+        {
+            dispatchedCount = await GetIsProcessedCountAsync(database).ConfigureAwait(false);
+            if (dispatchedCount < expectedCount)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(250), TestContext.Current.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        dispatchedCount.ShouldBe(expectedCount, $"Expected {expectedCount} processed row(s) in {database.Name}");
+    }
+
     private async Task WaitForDispatchAsync(
         ConcurrentBag<string> processedPayloads,
         int expectedCount,
@@ -451,5 +467,4 @@ SELECT COUNT(*) FROM {outboxTable} WHERE "IsProcessed" = TRUE
     }
 }
 #pragma warning restore CA1822, CA2100
-
 

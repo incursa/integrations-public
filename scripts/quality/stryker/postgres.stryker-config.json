@@ -8,9 +8,7 @@
     "test-runner": "mtp",
     "test-case-filter": "FullyQualifiedName~PostgresPublicApiContractTests|FullyQualifiedName~DatabaseSchemaDeploymentTests|FullyQualifiedName~ControlPlaneGlobalSchedulerTests",
     "reporters": [
-      "progress",
-      "html",
-      "json"
+      "progress"
     ],
     "thresholds": {
       "high": 70,
