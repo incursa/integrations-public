@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "name": "integrations-public",
+  "platform": {
+    "os": "debian",
+    "majorVersion": 13
+  },
+  "workingDirectory": ".",
+  "dependencies": {
+    "aptPackages": [
+      "ca-certificates",
+      "curl",
+      "git"
+    ],
+    "requiredCommands": [
+      "git"
+    ],
+    "dotnet": {
+      "globalJson": "global.json",
+      "installExactSdk": true
+    },
+    "codexCli": {
+      "install": true,
+      "updateOnBootstrap": true
+    }
+  },
+  "commands": {
+    "bootstrap": [
+      {
+        "file": "dotnet",
+        "args": ["tool", "restore"]
+      },
+      {
+        "file": "dotnet",
+        "args": ["restore", "Incursa.Integrations.Public.CI.slnx"]
+      },
+      {
+        "file": "dotnet",
+        "args": ["build", "Incursa.Integrations.Public.CI.slnx", "--configuration", "Release", "--no-restore"]
+      }
+    ],
+    "test": [
+      {
+        "file": "pwsh",
+        "args": ["-NoProfile", "-File", "scripts/quality/run-blocking-tests.ps1", "-NoRestore", "-NoBuild"]
+      }
+    ]
+  },
+  "readiness": {
+    "codexAuthenticationRequired": true
+  }
+}
