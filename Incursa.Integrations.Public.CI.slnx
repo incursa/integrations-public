@@ -20,6 +20,7 @@
     <Project Path="src/Incursa.Platform.Email.SqlServer/Incursa.Platform.Email.SqlServer.csproj" />
     <Project Path="src/Incursa.Platform.InMemory/Incursa.Platform.InMemory.csproj" />
     <Project Path="src/Incursa.Platform.Postgres/Incursa.Platform.Postgres.csproj" />
+    <Project Path="src/Incursa.Platform.Sqlite/Incursa.Platform.Sqlite.csproj" />
     <Project Path="src/Incursa.Platform.SqlServer/Incursa.Platform.SqlServer.csproj" />
   </Folder>
   <Folder Name="/tests/">
@@ -35,6 +36,7 @@
     <Project Path="tests/Incursa.Platform.CustomDomains.Tests/Incursa.Platform.CustomDomains.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Dns.Tests/Incursa.Platform.Dns.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Email.Tests/Incursa.Platform.Email.Tests.csproj" />
+    <Project Path="tests/Incursa.Platform.Sqlite.Tests/Incursa.Platform.Sqlite.Tests.csproj" />
     <Project Path="tests/Incursa.Platform.Smoke.AppHost/Incursa.Platform.Smoke.AppHost.csproj" />
     <Project Path="tests/Incursa.Platform.Smoke.ServiceDefaults/Incursa.Platform.Smoke.ServiceDefaults.csproj" />
     <Project Path="tests/Incursa.Platform.SmokeWeb/Incursa.Platform.SmokeWeb.csproj" />

@@ -22,6 +22,7 @@ Local development currently uses cross-repository `ProjectReference` links back 
 - [Repository architecture](docs/architecture/monorepo.md)
 - [Imported integration history](docs/architecture/imported-integrations.md)
 - [Repository scope boundary](docs/quality/repo-scope-boundary.md)
+- [SQLite Platform provider](docs/sqlite-platform-provider.md)
 - [Split plan](docs/repo-split-plan.md)
 - [Split summary](docs/repository-split-summary.md)
 - [Curated repo map](llms.txt)
@@ -46,7 +47,21 @@ Local development currently uses cross-repository `ProjectReference` links back 
 - `Incursa.Platform.Email.SqlServer`
 - `Incursa.Platform.InMemory`
 - `Incursa.Platform.Postgres`
+- `Incursa.Platform.Sqlite`
 - `Incursa.Platform.SqlServer`
+
+### SQLite coordination boundary
+
+`Incursa.Platform.Sqlite` provides the applicable Platform scheduling, inbox/outbox,
+lease, idempotency, fanout, operation, audit, and health contracts for one host and
+one local database file. It enables WAL mode with full synchronization, transactional
+migrations, bounded busy-timeout/retry handling, integrity checks, and online
+backup/restore. Keep the file off shared or network filesystems. SQLite does not
+provide multi-host leases, schedulers, inbox/outbox dispatch, discovery, control-plane
+coordination, or central metrics rollups. It emits local `System.Diagnostics.Metrics`
+counters that applications may export with OpenTelemetry. Use `Incursa.Platform.Postgres` or
+`Incursa.Platform.SqlServer` for those scenarios. See the [SQLite provider guide](docs/sqlite-platform-provider.md)
+for registration, support boundaries, recovery, and cutover procedures.
 
 ## Local Validation
 

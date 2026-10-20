@@ -22,7 +22,21 @@ Families currently shipped here:
 - `Incursa.Platform.Email.SqlServer`
 - `Incursa.Platform.InMemory`
 - `Incursa.Platform.Postgres`
+- `Incursa.Platform.Sqlite`
 - `Incursa.Platform.SqlServer`
+
+### Storage coordination boundary
+
+The SQLite provider implements the applicable scheduling, inbox/outbox, lease,
+idempotency, fanout, operation, audit, and health contracts for one host and one
+local database file. Its WAL, full-synchronization, transactional-migration,
+busy-timeout/retry, integrity-check, and backup/restore guarantees are local
+durability features, not distributed coordination. Do not place the SQLite file on a
+shared or network filesystem or use it for multi-host leases, scheduling, inbox/outbox
+dispatch, discovery, control-plane coordination, or central metrics rollups. It emits
+local `System.Diagnostics.Metrics` counters for application-level collection. Use the
+PostgreSQL or SQL Server providers for those scenarios. See the [SQLite provider
+guide](../sqlite-platform-provider.md) for supported semantics, options, and recovery.
 
 ### `tests/`
 

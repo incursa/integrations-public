@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-12T23:30:47.4311730-06:00",
+  "generatedAt": "2026-10-20T06:26:10.1147318-06:00",
   "generatedBy": "eng/Generate-PackageCatalog.ps1",
   "projects": [
     {
@@ -283,6 +283,20 @@
       "notes": "Provider implementation package."
     },
     {
+      "projectPath": "src/Incursa.Platform.Sqlite/Incursa.Platform.Sqlite.csproj",
+      "packageId": "Incursa.Platform.Sqlite",
+      "zone": "src",
+      "category": "providers",
+      "classification": "public-packable",
+      "packable": true,
+      "publishable": true,
+      "origin": {
+        "kind": "existing-repo",
+        "sourcePath": "C:/src/incursa/integrations-public"
+      },
+      "notes": "Provider implementation package."
+    },
+    {
       "projectPath": "src/Incursa.Platform.SqlServer/Incursa.Platform.SqlServer.csproj",
       "packageId": "Incursa.Platform.SqlServer",
       "zone": "src",
@@ -533,6 +547,20 @@
         "sourcePath": "C:/src/incursa/integrations-public"
       },
       "notes": "Smoke/sample coverage project preserved for hosted verification and demo flows."
+    },
+    {
+      "projectPath": "tests/Incursa.Platform.Sqlite.Tests/Incursa.Platform.Sqlite.Tests.csproj",
+      "packageId": "Incursa.Platform.Sqlite.Tests",
+      "zone": "tests",
+      "category": "tests",
+      "classification": "test-only",
+      "packable": false,
+      "publishable": false,
+      "origin": {
+        "kind": "existing-repo",
+        "sourcePath": "C:/src/incursa/integrations-public"
+      },
+      "notes": "Automated test project."
     },
     {
       "projectPath": "tests/Incursa.Platform.SqlServer.Tests/Incursa.Platform.SqlServer.Tests.csproj",
