@@ -49,7 +49,18 @@ Provider implementations with stable `Incursa.Platform.*` identities:
 - `src/Incursa.Platform.Email.SqlServer/`
 - `src/Incursa.Platform.InMemory/`
 - `src/Incursa.Platform.Postgres/`
+- `src/Incursa.Platform.Sqlite/` (single-host Platform contracts over local SQLite; not distributed coordination)
 - `src/Incursa.Platform.SqlServer/`
+
+SQLite implements the applicable scheduling, inbox/outbox, lease, idempotency,
+fanout, operation, audit, and health contracts for one host and one local database
+file. It uses WAL, `synchronous=FULL`, transactional migrations with drift hashes,
+bounded busy/locked retries, integrity checks, and online backup/restore. Keep the file
+off shared/network filesystems. It intentionally excludes multi-host discovery,
+control-plane coordination, shared-file operation, and central metrics rollups. It
+does emit local `System.Diagnostics.Metrics` counters for application/OpenTelemetry
+collection. Use PostgreSQL or SQL Server for distributed scenarios. See [docs/sqlite-platform-provider.md](docs/sqlite-platform-provider.md)
+for registration, options, support boundaries, and recovery.
 
 Supporting test/tooling projects retained here:
 
@@ -60,6 +71,7 @@ Supporting test/tooling projects retained here:
 - `tests/Incursa.Platform.Email.Tests/`
 - `tests/Incursa.Platform.InMemory.Tests/`
 - `tests/Incursa.Platform.Postgres.Tests/`
+- `tests/Incursa.Platform.Sqlite.Tests/`
 - `tests/Incursa.Platform.SqlServer.Tests/`
 - `tests/Incursa.Platform.Smoke.AppHost/`
 - `tests/Incursa.Platform.Smoke.ServiceDefaults/`

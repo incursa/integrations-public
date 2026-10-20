@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <Deterministic>true</Deterministic>
+    <PackageId>Incursa.Platform.Sqlite</PackageId>
+    <Version>6.0.10</Version>
+    <Authors>Incursa</Authors>
+    <Owners>Incursa</Owners>
+    <Description>Single-host SQLite provider for Incursa Platform scheduling, messaging, coordination, operations, and audit.</Description>
+    <PackageProjectUrl>https://github.com/incursa/integrations-public</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/incursa/integrations-public</RepositoryUrl>
+    <PackageIcon>nuget_logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);MA0051;MA0015</WarningsNotAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Incursa.Platform.Sqlite.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\nuget_logo.png" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Incursa.Platform" />
+    <PackageReference Include="Incursa.Platform.Audit" />
+    <PackageReference Include="Incursa.Platform.Correlation" />
+    <PackageReference Include="Incursa.Platform.Idempotency" />
+    <PackageReference Include="Incursa.Platform.Operations" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Cronos" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+  </ItemGroup>
+</Project>

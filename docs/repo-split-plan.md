@@ -14,11 +14,13 @@
 - `src/Incursa.Platform.Email.SqlServer/`
 - `src/Incursa.Platform.InMemory/`
 - `src/Incursa.Platform.Postgres/`
+- `src/Incursa.Platform.Sqlite/`
 - `src/Incursa.Platform.SqlServer/`
 
 ### Tests and tooling
 
 - provider-focused tests and smoke hosts that validate the moved implementations
+- `tests/Incursa.Platform.Sqlite.Tests/` for the single-host SQLite storage foundation
 - `tools/migrations/`
 - retained shared tooling that is still needed by this repo's build
 
@@ -33,3 +35,4 @@
 - cross-repository `ProjectReference` links are acceptable as a first local-development bridge
 - namespace and package identities stay intact unless a change is required for correctness
 - proprietary connectors remain out of scope for this pass
+- the SQLite provider is local-only and single-host; PostgreSQL and SQL Server remain the providers for multi-host coordination

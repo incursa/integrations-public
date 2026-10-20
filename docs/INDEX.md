@@ -25,6 +25,7 @@ Welcome to the comprehensive documentation for the Incursa Platform. This guide 
 
 ### Observability
 - [Observability Guide](observability/README.md) - Audit, operations, and observability conventions
+- [SQLite Platform Provider](sqlite-platform-provider.md) - Single-host SQLite registration, guarantees, recovery, and limitations
 
 ## 📤 Outbox Pattern
 

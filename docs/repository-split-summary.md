@@ -23,6 +23,7 @@ Source projects:
 - `src/Incursa.Platform.Email.SqlServer/`
 - `src/Incursa.Platform.InMemory/`
 - `src/Incursa.Platform.Postgres/`
+- `src/Incursa.Platform.Sqlite/`
 - `src/Incursa.Platform.SqlServer/`
 
 Tests and tooling:
@@ -40,6 +41,7 @@ Tests and tooling:
 - `tests/Incursa.Platform.Email.Tests/`
 - `tests/Incursa.Platform.InMemory.Tests/`
 - `tests/Incursa.Platform.Postgres.Tests/`
+- `tests/Incursa.Platform.Sqlite.Tests/`
 - `tests/Incursa.Platform.Smoke.AppHost/`
 - `tests/Incursa.Platform.Smoke.ServiceDefaults/`
 - `tests/Incursa.Platform.SmokeWeb/`
@@ -56,6 +58,10 @@ Tests and tooling:
 
 - moved projects use sibling `ProjectReference` links to `../platform` for provider-neutral packages
 - several moved test projects also reference the shared `Incursa.TestDocs.Analyzers` project from `platform`
+
+## SQLite scope
+
+`Incursa.Platform.Sqlite` is retained as a reusable single-host/local-file storage foundation. It provides WAL with full synchronization, transactional migrations, busy-timeout/retry handling, integrity checks, and tested backup/restore. It is not a distributed coordination provider; use PostgreSQL or SQL Server for multi-host coordination.
 
 ## Private follow-up
 
