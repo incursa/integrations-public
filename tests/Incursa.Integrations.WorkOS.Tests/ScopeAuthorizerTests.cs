@@ -29,6 +29,23 @@ public sealed class ScopeAuthorizerTests
     }
 
     [TestMethod]
+    [DataRow("feed:read", "artifacts:nuget:read")]
+    [DataRow("feed:read", "artifacts:apt:read")]
+    [DataRow("feed:read", "artifacts:raw:read")]
+    [DataRow("feed:publish", "artifacts:nuget:push")]
+    [DataRow("feed:publish", "artifacts:apt:push")]
+    [DataRow("feed:publish", "artifacts:raw:push")]
+    public async Task AuthorizeAsync_RegisteredFeedPermission_AllowsProtocolOperation(string grantedScope, string requiredScope)
+    {
+        var sut = new WorkOsScopeAuthorizer();
+        var identity = CreateIdentity("tenant-a", grantedScope);
+
+        var result = await sut.AuthorizeAsync(identity, requiredScope, "tenant-a").ConfigureAwait(false);
+
+        Assert.IsTrue(result.IsValid);
+    }
+
+    [TestMethod]
     public async Task AuthorizeAsync_TenantMismatch_Denies()
     {
         var sut = new WorkOsScopeAuthorizer();

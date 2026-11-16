@@ -29,5 +29,17 @@ public sealed class PermissionMapperTests
         Assert.HasCount(1, unknown);
         Assert.IsEmpty(scopes);
     }
+
+    [TestMethod]
+    public void MapToScopes_StrictModeRecognizesRegisteredFeedPermissions()
+    {
+        var options = WorkOsPermissionMappingOptions.CreateDefaultArtifacts();
+        var mapper = new WorkOsPermissionMapper(options);
+
+        var scopes = mapper.MapToScopes(["feed:read", "feed:publish"], strictMode: true, out var unknown);
+
+        Assert.IsEmpty(unknown);
+        CollectionAssert.AreEquivalent(new[] { "feed:read", "feed:publish" }, scopes.ToArray());
+    }
 }
 

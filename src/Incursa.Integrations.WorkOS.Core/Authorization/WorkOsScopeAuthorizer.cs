@@ -48,36 +48,42 @@ public sealed class WorkOsScopeAuthorizer : IWorkOsScopeAuthorizer
         if (requiredScope.Equals("artifacts:nuget:read", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("nuget.read")
+                || grantedScopes.Contains("feed:read")
                 || HasAdminRead(grantedScopes);
         }
 
         if (requiredScope.Equals("artifacts:nuget:push", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("nuget.push")
+                || grantedScopes.Contains("feed:publish")
                 || HasAdminWrite(grantedScopes);
         }
 
         if (requiredScope.Equals("artifacts:apt:read", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("apt.read")
+                || grantedScopes.Contains("feed:read")
                 || HasAdminRead(grantedScopes);
         }
 
         if (requiredScope.Equals("artifacts:apt:push", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("apt.push")
+                || grantedScopes.Contains("feed:publish")
                 || HasAdminWrite(grantedScopes);
         }
 
         if (requiredScope.Equals("artifacts:raw:read", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("raw.read")
+                || grantedScopes.Contains("feed:read")
                 || HasAdminRead(grantedScopes);
         }
 
         if (requiredScope.Equals("artifacts:raw:push", StringComparison.OrdinalIgnoreCase))
         {
             return grantedScopes.Contains("raw.push")
+                || grantedScopes.Contains("feed:publish")
                 || HasAdminWrite(grantedScopes);
         }
 

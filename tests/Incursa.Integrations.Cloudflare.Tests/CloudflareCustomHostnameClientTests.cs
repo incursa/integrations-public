@@ -25,7 +25,7 @@ public sealed class CloudflareCustomHostnameClientTests
         _ = await sut.GetByHostnameAsync("tenant.example.com", CancellationToken.None);
 
         Assert.NotNull(path);
-        Assert.Contains("/zones/custom-zone/custom_hostnames", path);
+        Assert.Contains("/zones/custom-zone/custom_hostnames", path, StringComparison.Ordinal);
     }
 
     [Fact]

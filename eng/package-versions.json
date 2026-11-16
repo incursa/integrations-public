@@ -3,7 +3,7 @@
     {
       "packageId": "Incursa.Integrations.Cloudflare",
       "projectPath": "src/Incursa.Integrations.Cloudflare/Incursa.Integrations.Cloudflare.csproj",
-      "version": "6.0.9"
+      "version": "6.0.10"
     },
     {
       "packageId": "Incursa.Integrations.Cloudflare.CustomDomains",
@@ -38,22 +38,22 @@
     {
       "packageId": "Incursa.Integrations.WorkOS",
       "projectPath": "src/Incursa.Integrations.WorkOS/Incursa.Integrations.WorkOS.csproj",
-      "version": "6.0.9"
+      "version": "6.0.10"
     },
     {
       "packageId": "Incursa.Integrations.WorkOS.Abstractions",
       "projectPath": "src/Incursa.Integrations.WorkOS.Abstractions/Incursa.Integrations.WorkOS.Abstractions.csproj",
-      "version": "6.0.9"
+      "version": "6.0.10"
     },
     {
       "packageId": "Incursa.Integrations.WorkOS.Access",
       "projectPath": "src/Incursa.Integrations.WorkOS.Access/Incursa.Integrations.WorkOS.Access.csproj",
-      "version": "6.0.9"
+      "version": "6.0.10"
     },
     {
       "packageId": "Incursa.Integrations.WorkOS.AspNetCore",
       "projectPath": "src/Incursa.Integrations.WorkOS.AspNetCore/Incursa.Integrations.WorkOS.AspNetCore.csproj",
-      "version": "6.0.9"
+      "version": "6.0.10"
     },
     {
       "packageId": "Incursa.Integrations.WorkOS.Audit",

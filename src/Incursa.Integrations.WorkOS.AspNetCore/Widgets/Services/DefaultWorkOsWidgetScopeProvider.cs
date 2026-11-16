@@ -9,6 +9,7 @@ internal sealed class DefaultWorkOsWidgetScopeProvider : IWorkOsWidgetScopeProvi
     private static readonly IReadOnlyDictionary<WorkOsWidgetType, string[]> BuiltInScopes = new Dictionary<WorkOsWidgetType, string[]>
     {
         [WorkOsWidgetType.UsersManagement] = ["widgets:users-table:manage"],
+        [WorkOsWidgetType.UserSessions] = ["widgets:users-table:manage"],
         [WorkOsWidgetType.ApiKeys] = ["widgets:api-keys:manage"],
         [WorkOsWidgetType.DomainVerification] = ["widgets:domain-verification:manage"],
         [WorkOsWidgetType.SsoConnection] = ["widgets:sso:manage"],
