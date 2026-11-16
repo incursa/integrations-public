@@ -32,7 +32,7 @@ public sealed class CloudflareKvClientTests
         })));
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.GetAsync("key-1", CancellationToken.None));
-        Assert.Contains("Cloudflare KV GET failed", ex.Message);
+        Assert.Contains("Cloudflare KV GET failed", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]

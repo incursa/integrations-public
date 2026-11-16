@@ -21,6 +21,8 @@ public sealed class WorkOsPermissionMappingOptions
         options.permissionToScope["raw.push"] = ["raw.push"];
         options.permissionToScope["artifacts:raw:read"] = ["raw.read", "artifacts:raw:read"];
         options.permissionToScope["artifacts:raw:push"] = ["raw.push", "artifacts:raw:push"];
+        options.permissionToScope["feed:read"] = ["feed:read"];
+        options.permissionToScope["feed:publish"] = ["feed:publish"];
         options.permissionToScope["artifacts:admin:read"] = ["artifacts:admin:read"];
         options.permissionToScope["artifacts:admin:write"] = ["artifacts:admin:write", "admin"];
         options.permissionToScope["admin"] = ["admin"];

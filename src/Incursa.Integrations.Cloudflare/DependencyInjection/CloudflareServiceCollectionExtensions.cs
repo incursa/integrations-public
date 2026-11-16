@@ -101,7 +101,10 @@ public static class CloudflareServiceCollectionExtensions
                 throw new InvalidOperationException($"Cloudflare R2 option '{nameof(CloudflareR2Options.Bucket)}' is required.");
             }
 
-            return new CloudflareR2BlobStore(factory.CreateClient(), r2Options.Bucket.Trim());
+            return new CloudflareR2BlobStore(
+                factory.CreateClient(),
+                r2Options.Bucket.Trim(),
+                sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<CloudflareR2BlobStore>>());
         });
 
         return services;

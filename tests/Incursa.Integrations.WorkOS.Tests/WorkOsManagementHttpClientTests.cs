@@ -56,23 +56,36 @@ public sealed class WorkOsManagementHttpClientTests
     [TestMethod]
     public async Task CreateApiKeyAsync_SetsNormalizedScopeOrderAndTenant()
     {
-        var handler = new StubHandler((request, _) =>
+        string? requestBody = null;
+        var handler = new StubHandler(async (request, cancellationToken) =>
         {
             if (request.Method == HttpMethod.Post && request.RequestUri?.AbsolutePath.EndsWith("/api_keys", StringComparison.Ordinal) == true)
             {
-                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                requestBody = request.Content is null
+                    ? string.Empty
+                    : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent("{\"id\":\"key_1\",\"name\":\"k1\",\"secret\":\"sk_test\"}", Encoding.UTF8, "application/json"),
-                });
+                };
             }
 
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+            return new HttpResponseMessage(HttpStatusCode.NotFound);
         });
 
         var sut = CreateClient(handler, new FakeTenantMapper("tenant-1"));
+        var requestedAt = DateTimeOffset.UtcNow;
 
         var created = await sut.CreateApiKeyAsync("org_1", "k1", ["raw.push", "nuget.read", "raw.push"], ttlHours: 2).ConfigureAwait(false);
 
+        Assert.IsNotNull(requestBody);
+        using var payload = JsonDocument.Parse(requestBody);
+        Assert.IsFalse(payload.RootElement.TryGetProperty("ttl_hours", out _));
+        Assert.IsTrue(payload.RootElement.TryGetProperty("expires_at", out var expiresAtElement));
+        Assert.AreEqual(JsonValueKind.String, expiresAtElement.ValueKind);
+        Assert.IsTrue(DateTimeOffset.TryParse(expiresAtElement.GetString(), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var expiresAt));
+        Assert.IsTrue(expiresAt >= requestedAt.AddHours(2));
+        Assert.IsTrue(expiresAt <= DateTimeOffset.UtcNow.AddHours(2));
         Assert.AreEqual("tenant-1", created.TenantId);
         CollectionAssert.AreEqual(new[] { "nuget.read", "raw.push" }, created.EffectiveScopes.ToArray());
         Assert.AreEqual("sk_test", created.Secret);
@@ -81,17 +94,24 @@ public sealed class WorkOsManagementHttpClientTests
     [TestMethod]
     public async Task CreateApiKeyAsync_UnwrapsDataAndReadsOneTimeTokenSecret()
     {
-        var handler = new StubHandler((request, _) =>
+        var handler = new StubHandler(async (request, cancellationToken) =>
         {
             if (request.Method == HttpMethod.Post && request.RequestUri?.AbsolutePath.EndsWith("/api_keys", StringComparison.Ordinal) == true)
             {
-                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Created)
+                var requestBody = request.Content is null
+                    ? string.Empty
+                    : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                using var payload = JsonDocument.Parse(requestBody);
+                Assert.IsFalse(payload.RootElement.TryGetProperty("ttl_hours", out _));
+                Assert.IsFalse(payload.RootElement.TryGetProperty("expires_at", out _));
+
+                return new HttpResponseMessage(HttpStatusCode.Created)
                 {
                     Content = new StringContent("{\"data\":{\"id\":\"key_2\",\"name\":\"k2\",\"one_time_token\":{\"secret\":\"sk_once\"}}}", Encoding.UTF8, "application/json"),
-                });
+                };
             }
 
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+            return new HttpResponseMessage(HttpStatusCode.NotFound);
         });
 
         var sut = CreateClient(handler, new FakeTenantMapper("tenant-2"));
@@ -125,6 +145,43 @@ public sealed class WorkOsManagementHttpClientTests
 
         Assert.AreEqual("key_3", created.ApiKeyId);
         Assert.AreEqual("sk_value", created.Secret);
+    }
+
+    [TestMethod]
+    public async Task CreateApiKeyAsync_NonSuccess_RetainsSafeDiagnosticsWithoutResponseSecrets()
+    {
+        var handler = new StubHandler((_, _) =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent(
+                    "{\"error\":\"invalid_request\",\"message\":\"Rejected sk_response_secret\",\"value\":\"credential-from-body\"}",
+                    Encoding.UTF8,
+                    "application/json"),
+            };
+            response.Headers.Add("X-Request-ID", "req_123");
+            return Task.FromResult(response);
+        });
+
+        var sut = CreateClient(handler, new FakeTenantMapper("tenant-1"));
+        HttpRequestException? failure = null;
+
+        try
+        {
+            _ = await sut.CreateApiKeyAsync("org_1", "k1", ["raw.push"], ttlHours: 2).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            failure = ex;
+        }
+
+        Assert.IsNotNull(failure);
+        Assert.AreEqual(HttpStatusCode.BadRequest, failure.StatusCode);
+        Assert.IsTrue(failure.Message.Contains("invalid_request", StringComparison.Ordinal));
+        Assert.IsTrue(failure.Message.Contains("req_123", StringComparison.Ordinal));
+        Assert.IsFalse(failure.Message.Contains("sk_test_123", StringComparison.Ordinal));
+        Assert.IsFalse(failure.Message.Contains("sk_response_secret", StringComparison.Ordinal));
+        Assert.IsFalse(failure.Message.Contains("credential-from-body", StringComparison.Ordinal));
     }
 
     [TestMethod]

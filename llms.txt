@@ -52,6 +52,13 @@ Provider implementations with stable `Incursa.Platform.*` identities:
 - `src/Incursa.Platform.Sqlite/` (single-host Platform contracts over local SQLite; not distributed coordination)
 - `src/Incursa.Platform.SqlServer/`
 
+The three email provider packages in this repository are authoritative concrete
+implementations. Provider-neutral email contracts, outbox orchestration, in-memory
+behavior, hosted processing, and idempotency cleanup remain owned by the platform
+packages `Incursa.Platform.Email` and `Incursa.Platform.Email.AspNetCore`. The
+standalone `Incursa.Email.*` identities are frozen retirement candidates and must
+not be introduced without a separate consumer-backed compatibility decision.
+
 SQLite implements the applicable scheduling, inbox/outbox, lease, idempotency,
 fanout, operation, audit, and health contracts for one host and one local database
 file. It uses WAL, `synchronous=FULL`, transactional migrations with drift hashes,
@@ -86,15 +93,21 @@ Supporting test/tooling projects retained here:
 - `eng/Generate-PackageCatalog.ps1`: regenerates the catalog from the current repo tree
 - `eng/Initialize-PackageVersions.ps1`: rewrites the version manifest from the current catalog
 - `eng/Resolve-AffectedProjects.ps1`: calculates changed projects and reverse dependencies
+- `eng/Get-AffectedPackageIds.ps1`: resolves the exact publishable package-ID allowlist for a release diff
 - `eng/Resolve-VersionPlan.ps1`: calculates semantic version bumps for changed packable projects and reverse dependents
 - `eng/Apply-VersionPlan.ps1`: applies the resolved version plan to the manifest and `.csproj` files
 - `eng/Invoke-PreCommitVersionPlan.ps1`: pre-commit helper that resolves staged impact, auto-applies required version bumps, stages the generated manifest/project updates, and re-validates the result
 - `eng/Test-PackageVersionChanges.ps1`: validates that affected packable projects include version bumps
 - `eng/Pack-PublicPackages.ps1`: packs only catalog-allowlisted projects
+- `.github/workflows/main-release-ci-cd.yml`: packs only affected public packages and promotes the same artifacts to the Incursa public feed and NuGet.org through the protected `public-nuget-publish` environment
 - `docs/azure-storage-platform-provider-adr.md`: Azure Storage provider mapping, guarantees, unsupported behaviors, and repair strategy
 - `docs/azure-storage-llm-reference.md`: cross-repo Azure Storage map covering raw storage contracts, Azure substrate implementations, platform inbox/outbox mechanics, options, and tests
 - `docs/repo-split-plan.md`: classification and split plan used for the extraction
 - `docs/repository-split-summary.md`: what moved here and what still depends on `platform`
+- `docs/architecture/ADR-2026-11-15-public-integration-authority.md`: accepted public/private repository authority decision for Cloudflare and WorkOS
+- `docs/architecture/cloudflare-workos-reconciliation.md`: commit-level reconciliation and version-continuity ledger for Cloudflare and WorkOS
+- `docs/architecture/electronic-notary-proof-reconciliation.md`: authority, identity, path, package, and validation ledger for public Electronic Notary and private Proof
+- `docs/architecture/postmark-email-reconciliation.md`: provider authority, legacy identity disposition, source/API equivalence, package continuity, and validation ledger for Postmark and email
 
 ## Orientation commands
 

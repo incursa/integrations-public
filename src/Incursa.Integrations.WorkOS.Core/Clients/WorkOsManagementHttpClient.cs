@@ -35,7 +35,7 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
             return null;
         }
 
-        var response = await PostJsonAsync("api_keys/validations", new Dictionary<string, object?>
+        var response = await PostJsonAsync("api_keys/validations", new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             ["value"] = presentedKey,
         }, ct).ConfigureAwait(false);
@@ -84,12 +84,22 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
 
     public async ValueTask<WorkOsCreatedApiKey> CreateApiKeyAsync(string organizationId, string displayName, IReadOnlyCollection<string> scopes, int? ttlHours, CancellationToken ct = default)
     {
-        var response = await PostJsonAsync($"organizations/{Uri.EscapeDataString(organizationId)}/api_keys", new Dictionary<string, object?>
+        Dictionary<string, object?> requestBody = new(StringComparer.Ordinal)
         {
             ["name"] = displayName,
             ["permissions"] = scopes,
-            ["ttl_hours"] = ttlHours,
-        }, ct).ConfigureAwait(false);
+        };
+
+        if (ttlHours is > 0)
+        {
+            requestBody["expires_at"] = DateTimeOffset.UtcNow.AddHours(ttlHours.Value).ToString("O", CultureInfo.InvariantCulture);
+        }
+
+        var response = await PostJsonAsync(
+            $"organizations/{Uri.EscapeDataString(organizationId)}/api_keys",
+            requestBody,
+            throwOnFailure: true,
+            ct).ConfigureAwait(false);
 
         if (response is null)
         {
@@ -117,7 +127,7 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
             yield break;
         }
 
-        await using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
+        using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
         using var payload = await JsonDocument.ParseAsync(stream, cancellationToken: ct).ConfigureAwait(false);
         if (!payload.RootElement.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.Array)
         {
@@ -139,7 +149,7 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
             return null;
         }
 
-        await using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
+        using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
         using var payload = await JsonDocument.ParseAsync(stream, cancellationToken: ct).ConfigureAwait(false);
         var tenantId = await _tenantMapper.GetTenantIdAsync(organizationId, ct).ConfigureAwait(false) ?? string.Empty;
         return ParseSummary(payload.RootElement, organizationId, tenantId);
@@ -159,7 +169,7 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
             return false;
         }
 
-        await using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
+        using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
         using var payload = await JsonDocument.ParseAsync(stream, cancellationToken: ct).ConfigureAwait(false);
         if (!payload.RootElement.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.Array)
         {
@@ -181,16 +191,126 @@ public sealed class WorkOsManagementHttpClient : IWorkOsManagementClient
     }
 
     private async ValueTask<JsonDocument?> PostJsonAsync(string path, object body, CancellationToken ct)
+        => await PostJsonAsync(path, body, throwOnFailure: false, ct).ConfigureAwait(false);
+
+    private async ValueTask<JsonDocument?> PostJsonAsync(string path, object body, bool throwOnFailure, CancellationToken ct)
     {
         using var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
         using var response = await _httpClient.PostAsync(path, content, ct).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
+            if (throwOnFailure)
+            {
+                var responseBody = response.Content is null
+                    ? null
+                    : await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
+                throw CreateFailure(response, responseBody);
+            }
+
             return null;
         }
 
-        await using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
+        using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
         return await JsonDocument.ParseAsync(stream, cancellationToken: ct).ConfigureAwait(false);
+    }
+
+    private static HttpRequestException CreateFailure(HttpResponseMessage response, string? responseBody)
+    {
+        var message = $"WorkOS management request failed with status code {(int)response.StatusCode}.";
+        var errorCode = TryGetErrorCode(responseBody);
+        if (errorCode is not null)
+        {
+            message += $" Error code: {errorCode}.";
+        }
+
+        var requestId = TryGetRequestId(response);
+        if (requestId is not null)
+        {
+            message += $" Request ID: {requestId}.";
+        }
+
+        return new HttpRequestException(message, inner: null, response.StatusCode);
+    }
+
+    private static string? TryGetErrorCode(string? responseBody)
+    {
+        if (string.IsNullOrWhiteSpace(responseBody))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var payload = JsonDocument.Parse(responseBody);
+            if (payload.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            var directError = TryGetSafeDiagnosticToken(payload.RootElement, "error")
+                ?? TryGetSafeDiagnosticToken(payload.RootElement, "code");
+            if (directError is not null)
+            {
+                return directError;
+            }
+
+            if (payload.RootElement.TryGetProperty("error", out var error) && error.ValueKind == JsonValueKind.Object)
+            {
+                return TryGetSafeDiagnosticToken(error, "code")
+                    ?? TryGetSafeDiagnosticToken(error, "type");
+            }
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+
+        return null;
+    }
+
+    private static string? TryGetRequestId(HttpResponseMessage response)
+    {
+        string[] headerNames = ["X-Request-ID", "X-WorkOS-Request-ID", "WorkOS-Request-ID"];
+        foreach (var headerName in headerNames)
+        {
+            if (response.Headers.TryGetValues(headerName, out var values))
+            {
+                var requestId = values.Select(TryGetSafeDiagnosticToken).FirstOrDefault(static value => value is not null);
+                if (requestId is not null)
+                {
+                    return requestId;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static string? TryGetSafeDiagnosticToken(JsonElement element, string propertyName)
+    {
+        return element.TryGetProperty(propertyName, out var value) && value.ValueKind == JsonValueKind.String
+            ? TryGetSafeDiagnosticToken(value.GetString())
+            : null;
+    }
+
+    private static string? TryGetSafeDiagnosticToken(string? value)
+    {
+        const int MaxDiagnosticTokenLength = 128;
+
+        if (string.IsNullOrWhiteSpace(value) || value.Length > MaxDiagnosticTokenLength)
+        {
+            return null;
+        }
+
+        if (value.StartsWith("sk_", StringComparison.OrdinalIgnoreCase)
+            || value.StartsWith("pk_", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return value.All(static character => char.IsAsciiLetterOrDigit(character) || character is '_' or '-' or '.')
+            ? value
+            : null;
     }
 
     private static WorkOsApiKeySummary ParseSummary(JsonElement item, string organizationId, string tenantId)

@@ -76,8 +76,8 @@ foreach ($planPackage in @($plan.publishPackages)) {
 $manifest.packages = @($manifest.packages | Sort-Object packageId)
 $manifest | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $ManifestPath -Encoding utf8
 
-foreach ($package in @($manifest.packages)) {
-    Set-ProjectVersion -RepoRoot $RepoRoot -ProjectPath ([string]$package.projectPath) -Version ([string]$package.version)
+foreach ($planPackage in @($plan.publishPackages)) {
+    Set-ProjectVersion -RepoRoot $RepoRoot -ProjectPath ([string]$planPackage.projectPath) -Version ([string]$planPackage.nextVersion)
 }
 
 if (@($plan.publishPackages).Count -eq 0) {

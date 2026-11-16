@@ -152,6 +152,46 @@ function Get-ProjectReferences {
     return @($references)
 }
 
+function Get-ExternalInputDirectories {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepoRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectPath
+    )
+
+    [xml]$projectXml = Get-Content -LiteralPath (Join-Path $RepoRoot $ProjectPath) -Raw
+    $projectDirectory = Split-Path -Parent (Join-Path $RepoRoot $ProjectPath)
+    $projectRelativeDirectory = Normalize-RelativePath (Split-Path -Parent $ProjectPath)
+    $directories = New-Object System.Collections.Generic.HashSet[string]([System.StringComparer]::OrdinalIgnoreCase)
+    $inputNodes = $projectXml.SelectNodes("/*[local-name()='Project']/*[local-name()='ItemGroup']/*[local-name()='Compile' or local-name()='Content' or local-name()='EmbeddedResource' or local-name()='None']")
+    foreach ($inputNode in $inputNodes) {
+        $include = $inputNode.GetAttribute("Include")
+        if ([string]::IsNullOrWhiteSpace($include) -or -not $include.Contains("..", [System.StringComparison]::Ordinal)) {
+            continue
+        }
+
+        $wildcardIndex = $include.IndexOfAny([char[]]@('*', '?'))
+        $inputRoot = if ($wildcardIndex -ge 0) { $include.Substring(0, $wildcardIndex) } else { $include }
+        $inputRoot = $inputRoot.TrimEnd([char[]]@('/', '\'))
+        if ([string]::IsNullOrWhiteSpace($inputRoot)) {
+            continue
+        }
+
+        $fullPath = [System.IO.Path]::GetFullPath((Join-Path $projectDirectory $inputRoot))
+        if ([System.IO.Path]::HasExtension($fullPath) -and $wildcardIndex -lt 0) {
+            $fullPath = Split-Path -Parent $fullPath
+        }
+
+        $relativePath = Normalize-RelativePath ([System.IO.Path]::GetRelativePath($RepoRoot, $fullPath))
+        if (-not $relativePath.StartsWith("..", [System.StringComparison]::Ordinal) -and $relativePath -ne $projectRelativeDirectory) {
+            [void]$directories.Add($relativePath)
+        }
+    }
+
+    return @($directories)
+}
+
 function Get-ProjectDependencyGraph {
     param(
         [Parameter(Mandatory = $true)]
@@ -213,6 +253,11 @@ function Get-PublishImpact {
 
     $projectPaths = @($Projects | ForEach-Object { [string]$_.projectPath })
     $graph = Get-ProjectDependencyGraph -RepoRoot $RepoRoot -Projects $Projects
+    $externalInputDirectoriesByProject = @{}
+    foreach ($projectPath in $projectPaths) {
+        $externalInputDirectoriesByProject[$projectPath] = @(Get-ExternalInputDirectories -RepoRoot $RepoRoot -ProjectPath $projectPath)
+    }
+
     $directlyChanged = New-Object System.Collections.Generic.HashSet[string]([System.StringComparer]::OrdinalIgnoreCase)
     $publishSet = New-Object System.Collections.Generic.HashSet[string]([System.StringComparer]::OrdinalIgnoreCase)
 
@@ -241,7 +286,10 @@ function Get-PublishImpact {
             foreach ($project in $Projects) {
                 $projectPath = [string]$project.projectPath
                 $projectDirectory = Normalize-RelativePath (Split-Path -Parent $projectPath)
-                if ($changedPath -eq $projectPath -or $changedPath -like "$projectDirectory/*") {
+                $matchesExternalInput = @($externalInputDirectoriesByProject[$projectPath] | Where-Object {
+                        $changedPath -eq $_ -or $changedPath -like "$_/*"
+                    }).Count -gt 0
+                if ($changedPath -eq $projectPath -or $changedPath -like "$projectDirectory/*" -or $matchesExternalInput) {
                     [void]$directlyChanged.Add($projectPath)
                     [void]$publishSet.Add($projectPath)
                 }

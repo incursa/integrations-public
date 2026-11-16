@@ -38,12 +38,13 @@ public sealed class CloudflareDependencyInjectionTests
         using var provider = services.BuildServiceProvider(validateScopes: true);
         Assert.NotNull(provider.GetService<ICloudflareKvClient>());
         Assert.NotNull(provider.GetService<ICloudflareKvStore>());
+        Assert.IsType<CloudflareR2BlobStore>(provider.GetRequiredService<ICloudflareR2BlobStore>());
     }
 
     [Fact]
     public void AddCloudflareIntegration_BindsConfigurationSections()
     {
-        var values = new Dictionary<string, string?>
+        var values = new Dictionary<string, string?>(StringComparer.Ordinal)
         {
             ["Cloudflare:ApiToken"] = "token",
             ["Cloudflare:AccountId"] = "acct",
