@@ -306,7 +306,7 @@ jobs:
           user: McAravey
 
       - name: Publish to both public feeds
-        uses: incursa/public-workflows/.github/actions/publish-nuget-dual@9cdb2cc0c9a35781d7424a29b05dd72c87f813bf
+        uses: incursa/public-workflows/.github/actions/publish-nuget-dual@fd9048230a5a6ea3c1d6b94bae4c48599aca0c56
         with:
           packages-directory: out
           expected-package-ids: ${{ steps.package_ids.outputs.value }}
