@@ -268,6 +268,7 @@ jobs:
     environment: public-nuget-publish
     permissions:
       contents: read
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -282,6 +283,12 @@ jobs:
           cat out/expected-package-ids.txt >> "$GITHUB_OUTPUT"
           echo 'PACKAGE_IDS' >> "$GITHUB_OUTPUT"
 
+      - name: Request short-lived NuGet.org API key
+        id: nuget_login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+        with:
+          user: McAravey
+
       - name: Publish to both public feeds
         uses: incursa/public-workflows/.github/actions/publish-nuget-dual@9cdb2cc0c9a35781d7424a29b05dd72c87f813bf
         with:
@@ -289,7 +296,7 @@ jobs:
           expected-package-ids: ${{ steps.package_ids.outputs.value }}
           github-token: ${{ github.token }}
           incursa-api-key: ${{ secrets.NUGET_INCURSA_PUBLIC_PUBLISH_TOKEN }}
-          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-api-key: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
 
       - name: Upload publication manifest
         uses: actions/upload-artifact@v4

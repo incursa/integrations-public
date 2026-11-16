@@ -99,7 +99,7 @@ Supporting test/tooling projects retained here:
 - `eng/Invoke-PreCommitVersionPlan.ps1`: pre-commit helper that resolves staged impact, auto-applies required version bumps, stages the generated manifest/project updates, and re-validates the result
 - `eng/Test-PackageVersionChanges.ps1`: validates that affected packable projects include version bumps
 - `eng/Pack-PublicPackages.ps1`: packs only catalog-allowlisted projects
-- `.github/workflows/main-release-ci-cd.yml`: packs only affected public packages and promotes the same artifacts to the Incursa public feed and NuGet.org through the protected `public-nuget-publish` environment
+- `.github/workflows/main-release-ci-cd.yml`: packs only affected public packages and promotes the same artifacts to the Incursa public feed and NuGet.org through the protected `public-nuget-publish` environment; NuGet.org publishing uses a short-lived credential exchanged through the repository's trusted-publishing OIDC policy
 - `docs/azure-storage-platform-provider-adr.md`: Azure Storage provider mapping, guarantees, unsupported behaviors, and repair strategy
 - `docs/azure-storage-llm-reference.md`: cross-repo Azure Storage map covering raw storage contracts, Azure substrate implementations, platform inbox/outbox mechanics, options, and tests
 - `docs/repo-split-plan.md`: classification and split plan used for the extraction
