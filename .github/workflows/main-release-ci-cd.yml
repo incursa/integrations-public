@@ -15,6 +15,10 @@ on:
         description: Optional base commit/ref for affected-package selection (defaults to HEAD^)
         required: false
         type: string
+      package_artifact_run_id:
+        description: Optional prior release run ID whose byte-identical nupkgs artifact should be retried
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -267,13 +271,25 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_packages && needs.blocking.outputs.has_packages == 'true' }}
     environment: public-nuget-publish
     permissions:
+      actions: read
       contents: read
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download packages from this run
+        if: ${{ inputs.package_artifact_run_id == '' }}
+        uses: actions/download-artifact@v4
         with:
           name: nupkgs
           path: out
+
+      - name: Download byte-identical packages from an earlier run
+        if: ${{ inputs.package_artifact_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: nupkgs
+          path: out
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.package_artifact_run_id }}
 
       - name: Read approved package IDs
         id: package_ids
