@@ -7,7 +7,7 @@
 ## Context
 
 The Cloudflare, WorkOS, Electronic Notary, and email provider package families
-exist in public, private, platform, and provider-specific standalone repositories.
+have existed in public, non-public, platform, and provider-specific source trees.
 Some package IDs have been published from more than one repository and on unrelated
 version lines. Proof also exists under two incompatible package and assembly
 identity families. This makes source, release, migration, and rollback authority
@@ -29,17 +29,11 @@ under `Incursa.Platform.Email` and `Incursa.Platform.Email.AspNetCore`. Their so
 is not copied into this repository. Public provider packages continue to consume
 those stable platform package identities.
 
-`integrations-private` remains the authority for proprietary and internally
-distributed integrations, including the Proof provider packages with the canonical
-IDs `Incursa.Integrations.Proof` and `Incursa.Integrations.Proof.AspNetCore`. The
-standalone repositories remain available during reconciliation and canary validation,
-but are not the future source of stable releases.
-
-The legacy public IDs `Incursa.Integrations.ElectronicNotary.Proof` and
-`Incursa.Integrations.ElectronicNotary.Proof.AspNetCore` are not silently aliased,
-republished, or treated as binary-compatible with the private Proof family. Resuming
-those IDs or providing a compatibility bridge requires a separate consumer and
-support-lifetime decision.
+Non-public integrations remain outside this repository. Their repository names,
+package identities, source layout, and release state are not part of the public
+contract. A legacy public identity is not silently aliased, republished, or treated
+as binary-compatible with a non-public implementation; any compatibility bridge
+requires a separate consumer and support-lifetime decision.
 
 The standalone `Incursa.Email.Abstractions`, `Incursa.Email.Core`,
 `Incursa.Email.AspNetCore`, `Incursa.Email.Postmark`, `Incursa.Email.Postgres`, and
@@ -56,9 +50,7 @@ an explicit release review after package and consumer validation.
 
 - Later committed Cloudflare and WorkOS fixes must be reconciled here with tests and
   recorded provenance.
-- Generic Electronic Notary remains public; Proof provider behavior remains private.
-- Proof consumers must migrate package references and namespaces explicitly if they
-  move from the legacy Electronic Notary identity to the canonical private identity.
+- Generic Electronic Notary remains public; non-public provider behavior remains outside this repository.
 - Public-only Cloudflare CustomDomains/Dns and WorkOS Access/Audit/Webhooks projects
   remain authoritative and must not be replaced by the narrower standalone trees.
 - A single monotonically increasing version line must be selected before the next
@@ -74,5 +66,5 @@ an explicit release review after package and consumer validation.
 ## Evidence
 
 See [Cloudflare and WorkOS reconciliation ledger](cloudflare-workos-reconciliation.md).
-See also [Electronic Notary and Proof reconciliation ledger](electronic-notary-proof-reconciliation.md).
-See also [Postmark and email reconciliation ledger](postmark-email-reconciliation.md).
+See also [Electronic Notary public package authority](electronic-notary-proof-reconciliation.md).
+See also [Postmark and email package authority](postmark-email-reconciliation.md).

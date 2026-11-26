@@ -7,7 +7,7 @@ It exists to give the vendor family a stable public landing point and a coherent
 ## What It Owns
 
 - the vendor-family root package for Electronic Notary integrations
-- shared naming, packaging, and discovery anchor points for the related proof packages
+- shared naming, packaging, and discovery anchor points for related public packages
 
 ## What It Does Not Own
 
@@ -19,10 +19,7 @@ It exists to give the vendor family a stable public landing point and a coherent
 
 - `Incursa.Integrations.ElectronicNotary.Abstractions`
 
-The private provider-specific Proof implementation now lives in `integrations-private` as:
-
-- `Incursa.Integrations.Proof`
-- `Incursa.Integrations.Proof.AspNetCore`
+Provider-specific non-public implementations are outside this repository and are not part of the public package contract.
 
 ## Install
 

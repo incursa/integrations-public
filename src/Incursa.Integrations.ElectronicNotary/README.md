@@ -9,14 +9,11 @@ Use it as the starting point when you are browsing the public Electronic Notary 
 - `Incursa.Integrations.ElectronicNotary`: root package and family anchor
 - `Incursa.Integrations.ElectronicNotary.Abstractions`: shared contracts for the family
 
-The provider-specific Proof implementation moved to the private integrations repository and now ships as:
-
-- `Incursa.Integrations.Proof`
-- `Incursa.Integrations.Proof.AspNetCore`
+Provider-specific non-public implementations are outside this repository and are not part of the public package contract.
 
 ## Relationship To Layer 2
 
-This family is currently intentionally vendor-shaped. It does not define a provider-neutral notarization or signature capability.
+This family is intentionally vendor-shaped. It does not define a provider-neutral notarization or signature capability.
 
 ## See Also
 

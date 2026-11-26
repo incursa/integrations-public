@@ -2,10 +2,10 @@
 
 This document is the fast path for answering "what have we built on Azure Storage?" across the Incursa split repositories.
 
-The Azure Storage work is spread across two repos and two layers:
+The Azure Storage work is spread across two repositories and two layers:
 
-1. `C:\src\incursa\platform` holds the provider-neutral contracts and workflow abstractions.
-2. `C:\src\incursa\integrations-public` holds the Azure-backed implementations.
+1. [`incursa/platform`](https://github.com/incursa/platform) holds the provider-neutral contracts and workflow abstractions.
+2. This repository, [`incursa/integrations-public`](https://github.com/incursa/integrations-public), holds the Azure-backed implementations.
 
 The most important architectural distinction is that there are two separate Azure stories:
 
@@ -20,9 +20,9 @@ Use this lookup when answering questions:
 
 | Question | Primary place to read |
 | --- | --- |
-| What are the raw storage interfaces? | `C:\src\incursa\platform\src\Incursa.Platform.Storage\StorageInterfaces.cs` |
-| What key/value, payload, work, and coordination types exist? | `C:\src\incursa\platform\src\Incursa.Platform.Storage\*.cs` |
-| What are the provider-neutral inbox/outbox contracts? | `C:\src\incursa\platform\src\Incursa.Platform\Inbox\*.cs` and `C:\src\incursa\platform\src\Incursa.Platform\Outbox\*.cs` |
+| What are the raw storage interfaces? | [`platform/src/Incursa.Platform.Storage/StorageInterfaces.cs`](https://github.com/incursa/platform/blob/main/src/Incursa.Platform.Storage/StorageInterfaces.cs) |
+| What key/value, payload, work, and coordination types exist? | [`platform/src/Incursa.Platform.Storage`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform.Storage) |
+| What are the provider-neutral inbox/outbox contracts? | [`platform/src/Incursa.Platform/Inbox`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Inbox) and [`platform/src/Incursa.Platform/Outbox`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Outbox) |
 | How is the generic Azure storage substrate implemented? | `src/Incursa.Integrations.Storage.Azure/` |
 | How are inbox/outbox/scheduler/leases implemented on Azure Storage? | `src/Incursa.Platform.AzureStorage/` |
 | What is the Azure design rationale and tradeoff model? | `docs/azure-storage-platform-provider-adr.md` |
@@ -34,7 +34,7 @@ Use this lookup when answering questions:
 
 Important packages and files:
 
-- `C:\src\incursa\platform\src\Incursa.Platform.Storage\`
+- [`platform/src/Incursa.Platform.Storage`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform.Storage)
   - `StorageInterfaces.cs`
   - `PayloadContracts.cs`
   - `WorkContracts.cs`
@@ -42,12 +42,12 @@ Important packages and files:
   - `StorageKeyPrimitives.cs`
   - `StorageWriteCondition.cs`
   - `StorageBatch.cs`
-- `C:\src\incursa\platform\src\Incursa.Platform\Inbox\`
-- `C:\src\incursa\platform\src\Incursa.Platform\Outbox\`
-- `C:\src\incursa\platform\src\Incursa.Platform\Scheduler\`
-- `C:\src\incursa\platform\src\Incursa.Platform\Lease\`
-- `C:\src\incursa\platform\src\Incursa.Platform\ExternalSideEffects\`
-- `C:\src\incursa\platform\src\Incursa.Platform\Fanout\`
+- [`platform/src/Incursa.Platform/Inbox`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Inbox)
+- [`platform/src/Incursa.Platform/Outbox`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Outbox)
+- [`platform/src/Incursa.Platform/Scheduler`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Scheduler)
+- [`platform/src/Incursa.Platform/Lease`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Lease)
+- [`platform/src/Incursa.Platform/ExternalSideEffects`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/ExternalSideEffects)
+- [`platform/src/Incursa.Platform/Fanout`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform/Fanout)
 
 ### Azure implementations in `integrations-public`
 
@@ -174,7 +174,7 @@ This means the generic Azure substrate is a good fit for raw storage primitives,
 
 ## Layer 2: Provider-Neutral Workflow Contracts
 
-The higher-level workflow abstractions live in `C:\src\incursa\platform\src\Incursa.Platform\`.
+The higher-level workflow abstractions live in [`platform/src/Incursa.Platform`](https://github.com/incursa/platform/tree/main/src/Incursa.Platform).
 
 Inbox-related contracts:
 
@@ -206,8 +206,8 @@ Also relevant:
 
 Important specs:
 
-- `C:\src\incursa\platform\specs\inbox-specification.md`
-- `C:\src\incursa\platform\specs\outbox-specification.md`
+- [`platform/specs/inbox-specification.md`](https://github.com/incursa/platform/blob/main/specs/inbox-specification.md)
+- [`platform/specs/outbox-specification.md`](https://github.com/incursa/platform/blob/main/specs/outbox-specification.md)
 
 Those specs were originally written around SQL-backed implementations, but they define the intended semantics that the Azure provider is trying to preserve.
 
@@ -485,9 +485,9 @@ Important docs in `integrations-public`:
 
 Important docs/specs in `platform`:
 
-- `C:\src\incursa\platform\src\Incursa.Platform.Storage\README.md`
-- `C:\src\incursa\platform\specs\inbox-specification.md`
-- `C:\src\incursa\platform\specs\outbox-specification.md`
+- [`platform/src/Incursa.Platform.Storage/README.md`](https://github.com/incursa/platform/blob/main/src/Incursa.Platform.Storage/README.md)
+- [`platform/specs/inbox-specification.md`](https://github.com/incursa/platform/blob/main/specs/inbox-specification.md)
+- [`platform/specs/outbox-specification.md`](https://github.com/incursa/platform/blob/main/specs/outbox-specification.md)
 
 ## Short Answer Summary
 
