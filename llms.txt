@@ -1,6 +1,6 @@
 # Incursa Integrations Public
 
-`integrations-public` is the public provider-implementation repository for the Incursa split. Keep this repo focused on concrete adapters and provider-backed implementations that can depend on `platform`, while keeping provider-neutral abstractions in [C:\src\incursa\platform](C:/src/incursa/platform).
+`integrations-public` is the public provider-implementation repository for the Incursa split. Keep this repo focused on concrete adapters and provider-backed implementations that can depend on [`platform`](https://github.com/incursa/platform), while keeping provider-neutral abstractions in that repository.
 
 ## Repository map
 
@@ -105,9 +105,9 @@ Supporting test/tooling projects retained here:
 - `docs/repo-split-plan.md`: classification and split plan used for the extraction
 - `docs/repository-split-summary.md`: what moved here and what still depends on `platform`
 - `docs/architecture/ADR-2026-11-15-public-integration-authority.md`: accepted public/private repository authority decision for Cloudflare and WorkOS
-- `docs/architecture/cloudflare-workos-reconciliation.md`: commit-level reconciliation and version-continuity ledger for Cloudflare and WorkOS
-- `docs/architecture/electronic-notary-proof-reconciliation.md`: authority, identity, path, package, and validation ledger for public Electronic Notary and private Proof
-- `docs/architecture/postmark-email-reconciliation.md`: provider authority, legacy identity disposition, source/API equivalence, package continuity, and validation ledger for Postmark and email
+- `docs/architecture/cloudflare-workos-reconciliation.md`: public authority and compatibility decision for Cloudflare and WorkOS
+- `docs/architecture/electronic-notary-proof-reconciliation.md`: public Electronic Notary authority and boundary decision
+- `docs/architecture/postmark-email-reconciliation.md`: provider authority and legacy identity decision for Postmark and email
 
 ## Orientation commands
 

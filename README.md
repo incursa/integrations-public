@@ -13,9 +13,9 @@ Dependency direction:
 
 - `integrations-public` can depend on `platform`
 - `platform` must not depend on `integrations-public`
-- future proprietary connectors should live in `integrations-private`
+- proprietary connectors belong in a non-public integration repository
 
-Local development currently uses cross-repository `ProjectReference` links back to [platform](C:/src/incursa/platform) for shared abstractions and provider-neutral test/tooling assets.
+Provider-neutral abstractions come from [`incursa/platform`](https://github.com/incursa/platform). CI consumes declared package dependencies; local overrides must be explicit and must not assume a machine-specific sibling path.
 
 ## Start Here
 
@@ -33,9 +33,9 @@ Local development currently uses cross-repository `ProjectReference` links back 
 - [`tests/`](tests/) contains provider-focused tests, smoke hosts, and minimal shared test utilities required by this repo.
 - [`docs/`](docs/) contains architecture notes, scope rules, and migration records.
 - [`eng/`](eng/) contains package catalog, versioning, and release helpers.
-- [`tools/`](tools/) currently contains the schema migration CLI that remains tied to the moved provider packages.
+- [`tools/`](tools/) contains the schema migration CLI tied to the provider packages.
 
-## Current Package Families
+## Package families
 
 - `Incursa.Integrations.Cloudflare*`
 - `Incursa.Integrations.ElectronicNotary*`
